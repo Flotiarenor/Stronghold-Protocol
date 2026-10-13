@@ -650,3 +650,50 @@
 }
 
 .diy-choice__tags { display: flex; flex-wrap: wrap; gap: .08rem; color: var(--text-lo); font-size: max(calc(.12 * var(--t)), 10px); }
+@media (prefers-reduced-motion: reduce) { .lo, .lo-card { animation: none; transition: none; } }
+
+/* ---- 干员皮肤 (docs/SKINS.md, ui/skinPicker.js) --------------------------------------------------------------
+   FIVE tiles per row, always — `repeat(5, …)`, not `auto-fit`, so a tile is the same size for every operator. The
+   默认 tile is the first of the five and every operator has it, and no operator has more than three skins (2 and 3
+   are the common cases), so five is the narrowest row that fits the worst case in one line and the widest that keeps
+   a tile at a readable size. A row with fewer than five leaves the rest empty: a row that stretched 1, 2 or 3 tiles
+   across the full width would make each one bigger than in a full row, so the appearance of an operator would change
+   with how many skins it happens to have.
+
+   The art is a FIXED 1:2 box — the shape of the client's 180×360 portrait, the "big icon" a skin is chosen by. The
+   box, not the image, decides the size, and one portrait family covers every skin at that size
+   (spritepack/char_portrait_*.ab). The illustration behind the enlarged preview is NOT fixed — 1024 px for most
+   skins, 1280/1320/1416 for a few — which is exactly why it is not the button art. `object-fit: cover` fills the box
+   from either source. A skin whose files are not on this server is dimmed but still clickable — clicking it is what
+   installs it — and shows 未安装 · 点击安装 where an installed one shows its series.
+   Clicking the CHOSEN tile opens the enlarged view (`.lo-skin-preview`). */
+.lo-skins { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .1rem; align-items: start; }
+.lo-skin {
+  position: relative; min-width: 0; display: flex; flex-direction: column; gap: .04rem; padding: .06rem;
+  font: inherit; color: var(--text-md); text-align: left; cursor: pointer;
+  background: rgba(255, 255, 255, .025); border: 1px solid var(--line);
+  transition: background var(--t-fast), border-color var(--t-fast); touch-action: manipulation;
+}
+.lo-skin:hover:not(:disabled) { border-color: var(--line-3); }
+.lo-skin:active:not(:disabled) { transform: scale(.98); }
+.lo-skin:focus-visible { outline: 2px solid var(--mint-400); outline-offset: 2px; }
+.lo-skin.is-on { color: var(--text-hi); background: linear-gradient(180deg, rgba(78, 216, 175, .14), rgba(78, 216, 175, .02) 75%); border-color: rgba(78, 216, 175, .7); }
+.lo-skin:disabled { cursor: default; opacity: .45; }
+.lo-skin--missing:not(:disabled) { opacity: .62; }
+.lo-skin--missing .lo-skin__group { color: var(--mint-300); }
+/* Library art with no model: shown (the illustration is worth seeing) but disabled, so it reads as a reference rather
+   than as an install prompt that could never succeed. */
+.lo-skin--artonly { cursor: not-allowed; }
+.lo-skin--artonly .lo-skin__group { color: var(--text-dim); }
+.lo-skin__art {
+  position: relative; aspect-ratio: 1 / 2; min-height: max(1.5rem, 130px); overflow: hidden;
+  background: rgba(0, 0, 0, .35); border: 1px solid var(--line);
+}
+.lo-skin__art img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.lo-skin__art--none { position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255, 255, 255, .06) 0 3px, transparent 3px 7px); }
+.lo-skin__text { min-width: 0; display: flex; flex-direction: column; gap: .01rem; }
+.lo-skin__name { font-size: max(.16rem, 11px); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lo-skin__group { font-family: var(--font-num); font-size: max(.12rem, 9px); letter-spacing: .06em; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* the enlarged view: the ILLUSTRATION (whole, not the cropped button art), as large as the modal allows */
+.lo-skin-preview { display: flex; align-items: center; justify-content: center; }
+.lo-skin-preview img { display: block; max-width: 100%; max-height: 65dvh; object-fit: contain; }

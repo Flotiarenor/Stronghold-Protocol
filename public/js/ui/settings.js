@@ -6,7 +6,8 @@
 // ui/gameLogic/shortcuts.js; the community request 「快捷键可不可以自己设置」, the owner's decision of 2026-10-07) and
 // 问题反馈, which copies the diagnostics of this page for a bug report (diag.js: the error log, this browser, optionally
 // the battle on screen; nothing is uploaded). The lobby and the room open it from a 设置 button next to 玩法说明
-// (SettingsButton, GitHub #238); the title screen and the match have their own gear.
+// (SettingsButton, GitHub #238); the title screen and the match have their own gear. 干员皮肤 lives in the 干员调配
+// overlay (ui/skinPicker.js), not here.
 //
 // 文字大小 (textSize, applied by applyTextSize): the interface text root `--t` of css/theme.css — a phone clamps the
 // layout root `1rem` at 40 px (theme.css), which left the .18rem body text at 7.2 CSS px while the browser's own font

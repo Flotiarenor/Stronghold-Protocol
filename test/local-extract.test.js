@@ -88,6 +88,43 @@ print(json.dumps({
     assert.deepEqual(out.pages, ['token_x.png', 'token_x2.png']);
   });
 
+  test('url_safe_atlas: a page named after the client (`…_epoque#7.png`) is renamed to the model stem in the text AND the map', () => {
+    // The `#` cannot be percent-encoded here: pixi-spine reads the page name out of the .atlas text and resolves it
+    // against the atlas URL itself, and PIXI's loader strips everything from a `#` on before it picks a parser — the
+    // URL left has no `.png`, no image parser matches it and `load()` resolves null, so the whole model fails. The file
+    // on disk and the page line have to carry the same safe name (the stem the .skel/.atlas of the model already use).
+    const out = py(`
+pages = {'char_102_texas_epoque#7.png': 'IMG', 'plain.png': 'IMG2'}
+raw = '\\r\\nchar_102_texas_epoque#7.png\\r\\nsize: 512,512\\r\\npma: true\\r\\nC_Body\\r\\n  rotate: false\\r\\n  xy: 0, 0\\r\\n\\r\\nplain.png\\r\\nsize: 8,8\\r\\n'
+text, mapped = e.url_safe_atlas(raw, pages)
+print(json.dumps({'names': e.atlas_pages(text), 'keys': sorted(mapped),
+  'lines': e.normalize_atlas(text, {p: (1, 2) for p in e.atlas_pages(text)}).split('\\n'),
+  'unsafe': [e.page_filename(n) for n in ['a?b%c#d.png', 'plain.png']]}))`);
+    assert.deepEqual(out.names, ['char_102_texas_epoque_7.png', 'plain.png'], 'the page line is the URL-safe name');
+    assert.deepEqual(out.keys, ['char_102_texas_epoque_7.png', 'plain.png'], 'and the map key follows it, so text and file agree');
+    assert.deepEqual(out.lines, ['', 'char_102_texas_epoque_7.png', 'size: 1,2', 'pma: true', 'C_Body', '  rotate: false',
+      '  xy: 0, 0', '', 'plain.png', 'size: 1,2', 'pma: true', ''], 'the sizes/pma normalization still runs on the new names');
+    assert.deepEqual(out.unsafe, ['a_b_c_d.png', 'plain.png'], '`?` (a query) and `%` (an escape) break a page URL the same way');
+  });
+
+  test('asset_url: the client names are percent-encoded as one whole path (the `#` of a skin included)', () => {
+    // The one generator behind every manifest path. The escape has to live here: boardArt.js and the avatar /
+    // portrait / skin URLs of assets.js hand the manifest string to the browser unchanged, so a `#` that survived
+    // into the manifest would be cut at the fragment and 404. render/board3d/load.js is the one consumer that
+    // escapes, and it decodes first (`manifestUrl`) so it is a no-op for what this writes — see
+    // test/render/board3d-extract.test.js for the contract over the whole manifest.
+    const out = py(`
+print(json.dumps({
+  'skin':  e.asset_url('library', 'opavatar', 'char_002_amiya_epoque#4', 'image.png'),
+  'query': e.asset_url('map', 'fx', 'a?b.png'),
+  'gate':  e.asset_url('map', 'fx', '[opt]merged_textures.webp'),
+  'plus':  e.asset_url('library', 'opavatar', 'char_002_amiya_1+', 'image.png')}))`);
+    assert.equal(out.skin, '/assets/local/library/opavatar/char_002_amiya_epoque%234/image.png', '`#` is escaped');
+    assert.equal(out.query, '/assets/local/map/fx/a%3Fb.png', '`?` is escaped');
+    assert.equal(out.gate, '/assets/local/map/fx/%5Bopt%5Dmerged_textures.webp', 'brackets are escaped');
+    assert.equal(out.plus, '/assets/local/library/opavatar/char_002_amiya_1%2B/image.png', '`+` is escaped');
+  });
+
   test('prefab_spine_nodes: the SkeletonAnimation renderers of a prefab tree, depth first, inactive branches marked', () => {
     // a directional token prefab: Graphic / DefaultSkin / FaceSwitcher / {Front, Back} (each with its own skeleton), an
     // inactive Spare renderer, a component in another bundle (m_FileID ≠ 0) and a MonoBehaviour without a type tree
@@ -256,6 +293,74 @@ describe('extracted board-scene files (when a local client was extracted)', { sk
     }
     const bkg = JSON.parse(readFileSync(onDisk(manifest.groups['mesh/map_autochess_bkg'].prefab.path), 'utf8'));
     assert.deepEqual(bkg.map((n) => n.name), ['S_Background_common', 'S_Background_shadow']);
+  });
+});
+
+describe('extracted operator-skin models (when a local client was extracted)', { skip: !manifest?.groups?.['spine/op/char_003_kalts/char_003_kalts_boc_6/front'] && 'no local skin models extracted' }, () => {
+  const groups = Object.entries(manifest.groups).filter(([g]) => g.startsWith('spine/op/'));
+  const onDisk = (p) => path.join(ROOT, 'public', p);
+
+  test('no page or model file is named with the client\'s `#` (a page name reaches the loader unencoded)', () => {
+    assert.ok(groups.length > 100, `every installed skin: ${groups.length} groups`);
+    for (const [g, files] of groups) {
+      for (const name of Object.keys(files)) assert.ok(!name.includes('#') && !name.includes('%23'), `${g}/${name}`);
+    }
+  });
+
+  test('every atlas names a page of its own group — the file pixi-spine will request', () => {
+    let checked = 0;
+    for (const [g, files] of groups) {
+      const atlas = Object.keys(files).find((n) => n.endsWith('.atlas'));
+      if (!atlas) continue;
+      const p = onDisk(files[atlas].path);
+      if (!existsSync(p)) continue;
+      // the page lines of a Spine atlas: an unindented line without ':' after a blank line (or first) — the same rule
+      // as extract.py _is_page_line
+      const lines = readFileSync(p, 'utf8').replace(/\r\n/g, '\n').split('\n');
+      const page = lines.find((l, i) => { const t = l.trim(); return t && !t.includes(':') && !/^\s/.test(l) && (i === 0 || !lines[i - 1].trim()); });
+      assert.ok(page, `${g}: an atlas with a page`);
+      assert.ok(Object.hasOwn(files, page), `${g}: ${page} is listed in the manifest group`);
+      checked++;
+    }
+    assert.ok(checked > 100, `atlases checked: ${checked}`);
+  });
+
+  // facings_of + local-skins-meta.mjs fixFacings: one Front per skin and a Back only as a second skeleton.
+  //
+  // History, so this is not "fixed" back: the first version took refs[0] (bundle order — a coin flip), the second
+  // took the LARGEST skeleton (for some skins that is the `build_` display model or the dynamic illustration, so
+  // 希望巡游 rendered the base chibi instead of the battle one). The facing is now decided by the client's own `Die`
+  // clip, which the Front alone carries: 264 of 268 pairs have it on exactly one side, and it corrected 4 pairs the
+  // size rule had backwards. 3 pairs carry `Die` on both sides and 1 on neither; those keep the size-based order.
+  test('one Front per skin; a Back only as a second model, never without its Front', () => {
+    const metaPath = path.join(ROOT, 'tools/assets/local-skins-meta.json');
+    if (!existsSync(metaPath)) return;
+    const models = JSON.parse(readFileSync(metaPath, 'utf8')).models || {};
+    const keys = Object.keys(models);
+    const fronts = keys.filter((k) => !k.endsWith('/back'));
+    const backOwners = new Set(keys.filter((k) => k.endsWith('/back')).map((k) => k.replace(/\/back$/, '')));
+    assert.ok(fronts.length > 100, `fronts: ${fronts.length}`);
+    assert.strictEqual(new Set(fronts).size, fronts.length, 'no skin has two Fronts');
+    for (const owner of backOwners) assert.ok(fronts.includes(owner), `a Back without its Front: ${owner}`);
+
+    // a battle Back is the Front's clip set minus the fall; a SECOND skeleton that is the base (dorm) chibi instead
+    // is a different model. The client ships that for exactly two skins — their `back` holds the base chibi's
+    // Default / Interact / Move / Relax / Sit / Sleep / Special instead of a battle Back, and nothing in the clips
+    // distinguishes it from a battle skeleton, so they are the two documented exceptions rather than a silent pass.
+    const BASE_ONLY = ['Interact', 'Sit', 'Sleep', 'Relax'];
+    const exceptions = [];
+    let withDie = 0;
+    for (const owner of backOwners) {
+      const f = Object.keys(models[owner].animations || {});
+      const b = Object.keys(models[`${owner}/back`].animations || {});
+      if (f.includes('Die')) withDie++;
+      if (b.some((c) => BASE_ONLY.includes(c))) { exceptions.push(owner); continue; }
+      if (b.includes('Die') && !f.includes('Die')) assert.fail(`${owner}: the Back carries Die and the Front does not`);
+    }
+    assert.ok(withDie > 200, `Fronts carrying Die: ${withDie}`);
+    assert.deepStrictEqual(exceptions,
+      ['char_134_ifrit/char_134_ifrit_kfc_1', 'char_253_greyy/char_253_greyy_epoque_8'],
+      'the skins whose second skeleton is the base chibi (a new one means the same model is being mis-assigned)');
   });
 });
 

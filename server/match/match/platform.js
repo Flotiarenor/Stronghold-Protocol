@@ -77,6 +77,26 @@ export class MatchPlatform {
     return res;
   }
 
+  /**
+   * room.skins during the match (docs/SKINS.md): accepted in ANY phase, unlike the loadout just above. The loadout is
+   * locked at INFO_CHECK because it changes what a unit does; a skin changes only what it looks like, and it is public
+   * — a teammate picking a different model mid-match is harmless, so `markPublic` carries it to everyone on the next
+   * broadcast. The lobby already filtered the ids (freezeSkins); PlayerState.setSkins re-checks them against the data.
+   * @param {string} playerId
+   * @param {Record<string, string> | null} skins
+   * @returns {{ ok: true } | { error: string, detail?: string }}
+   */
+  setSkins(playerId, skins) {
+    const ps = this.players.get(playerId);
+    if (!ps || ps.isBot || ps.left) return fail(ERR.NOT_IN_ROOM);
+    let res = OK;
+    this.guard(() => {
+      ps.setSkins(skins);
+      this.markPublic();
+    });
+    return res;
+  }
+
   onDisconnect(playerId) {
     const ps = this.players.get(playerId);
     if (!ps || ps.isBot || this.disposed) return;

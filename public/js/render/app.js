@@ -139,6 +139,7 @@ import { boardPreference, switchableBox, bandFor, fieldRows, boardArea, viewKind
 import { renderInfo, FORCED_EXIT, showsDeathFx } from './app/info.js';
 import { resolveAssets, makeData, withTimeout, QUALITY_RES, BOARD_RES, releaseGl } from './app/host.js';
 import { t } from '../../../shared/i18n.js';
+import { skinFor } from '../ui/skins.js';
 
 export { ensurePixi } from './app/pixi.js';
 export { PEN_CAMERA_MS, LEADER_HIT_STYLE, DRAG_HOLD_TILES } from './app/tune.js';
@@ -171,8 +172,11 @@ export async function createFieldView(host, options = {}) {
   const threePromise = artListed.then((ok) => (ok ? loadThree() : null)).catch(() => null);
   const packPromise = artListed.then((ok) => (ok ? Promise.resolve(assets.ready ? assets.ready() : null).catch(() => null).then(() => loadBoardPack(assets)) : null)).catch(() => null);
   // the manifest, and the optional local-art manifest in parallel: unit views pick an enemy's local-client model by it
-  // (assets.js spineEntry, DESIGN §13 — 灼热源石虫 / 炽焰源石虫); absent or slow, they draw the web models
-  await withTimeout(Promise.all([assets.ready ? assets.ready() : null, assets.local ? assets.local() : null]
+  // (assets.js spineEntry, DESIGN §13 — 灼热源石虫 / 炽焰源石虫); absent or slow, they draw the web models.
+  // skins-local.json rides along: a skin the web manifest has no model for is resolved from the local client's
+  // extracted copy (docs/SKINS.md) — spineEntry is synchronous, so the manifest has to be in hand before the view is.
+  await withTimeout(Promise.all([assets.ready ? assets.ready() : null, assets.local ? assets.local() : null,
+    assets.localSkins ? assets.localSkins() : null]
     .map((p) => Promise.resolve(p).catch(() => {}))), 4000, signal);
   signal?.throwIfAborted();
   // web fonts for the bitmap damage numbers / tier chips (never block long)
@@ -689,6 +693,9 @@ export async function createFieldView(host, options = {}) {
     return {
       kind: 'op', side: 'ally', defId: piece.id,
       spine: rec?.assets?.spine || rec?.charId || null, avatar: rec?.assets?.avatar || rec?.charId || null,
+      // 皮肤 (docs/SKINS.md): present when the prep unit came from the server (Match.prepView); a golden piece's own
+      // id is not a skin key (setSkins only accepts base chess ids), so fall back to this client's own choice
+      skin: piece.skin ?? skinFor(chess?.baseId || piece.id) ?? skinFor(piece.id) ?? null,
       tier: chess?.tier || piece.tier || 1, golden: !!(piece.golden || chess?.isGolden), dir,
       ...(si ? { standInFor: si.standInFor } : null),
       ...(dr ? { diy: { charId: pick.charId, skillIndex: pick.skillIndex ?? null, uniEquipId: pick.uniEquipId ?? null } } : null),
@@ -768,8 +775,9 @@ export async function createFieldView(host, options = {}) {
       const key = 'p:' + e.uid;
       e.key = key;
       const info = pieceInfo(e.piece, e.area);
-      // (the model is part of it: a piece whose body changes — a merge, an own 补位 / 自选 setting arriving — is rebuilt)
-      const sig = `${info.kind}|${info.defId}|${info.golden ? 1 : 0}|${info.spine || ''}`;
+      // (the model is part of it: a piece whose body changes — a merge, an own 补位 / 自选 setting arriving, a skin
+      // switch — is rebuilt; the skinId is in the key too, docs/SKINS.md)
+      const sig = `${info.kind}|${info.defId}|${info.golden ? 1 : 0}|${info.spine || ''}|${info.skin || ''}`;
       let v = views.get(key);
       if (v && v._sig !== sig) { dropView(key); v = null; }
       const w = slotWorld(e);

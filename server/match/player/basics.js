@@ -112,6 +112,38 @@ export class PlayerBasics {
   }
 
   /**
+   * 皮肤 (docs/SKINS.md): replace this player's skin choices. `{ [chessId]: skinId }`; the ids come from
+   * data/skins.json on the client. Validation is deliberately light — an unknown or mismatched skinId cannot do
+   * anything but fall back to the operator's default model in spineEntry() — so only the shape and the chess id
+   * are checked here, and a malformed entry is dropped rather than rejecting the whole selection.
+   * @param {Record<string, string>|null} skins
+   * @returns {boolean} whether anything was accepted
+   */
+  setSkins(skins) {
+    if (this.isBot) return false;
+    const out = {};
+    if (skins && typeof skins === 'object' && !Array.isArray(skins)) {
+      for (const [id, skinId] of Object.entries(skins)) {
+        if (typeof skinId !== 'string' || !skinId) continue;
+        // Same gate the loadout uses (checkLoadout): a base, non-golden chess record. The key is the CHESS id
+        // (`chess_char_1_01_a`), which is what board pieces and the prep view carry — not the operator id.
+        // A 自选编队 slot (isDiy) is allowed deliberately: it is a deployable board cell whose operator the player
+        // picked, so a skin on it is a real choice (server/lobby.js freezeSkins keeps the same rule).
+        const rec = this.gd.chess(id);
+        if (!rec || rec.isGolden || rec.isHidden) continue;
+        if (!rec.isDiy && rec.visible === false) continue;
+        if (rec.baseId && rec.baseId !== id) continue;
+        out[id] = skinId;
+      }
+    }
+    this.skins = Object.freeze(out);
+    // No dirty() here: this runs from the constructor too (a seat's choice applied at match start), where `this.m`
+    // has no view to mark yet. Callers that change it mid-match mark the public view themselves — Match.setSkins
+    // calls markPublic, because skins are public (that is how a teammate sees your skin).
+    return Object.keys(out).length > 0;
+  }
+
+  /**
    * The potential / 练度 this player's piece of chess record `chessRecord` fights at (0.2.2; shared/potential.js
    * cultivationOf over `this.ops` — defaults 潜能 6, 精英2 Lv.60): the operator the player owns — the chess fielded as
    * itself, an owned 自选 pick (its charId) — or null for a 补位 stand-in and a prototype 自选 pick.

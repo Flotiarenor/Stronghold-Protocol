@@ -46,6 +46,18 @@ export const DATA_FILES = Object.freeze({
   assets: 'assets.json',
   // 补位 stand-ins (DATA.md §18): the bodies the 干员持有 screen, the cards and the detail card compose (shared/standIn.js)
   backups: 'backups.json',
+  // 干员皮肤目录 (docs/SKINS.md): { chars: { [charId]: [{ id, name, group }] } } — every skin the project knows,
+  // installed or not. The URLs of an installed one come from `assets` above; this file never carries URLs.
+  skins: 'skins.json',
+  // Skin models extracted from the LOCAL game client (docs/SKINS.md, tools/local-extract extract.py): the local
+  // counterpart of chars[charId].skins in data/assets.json. Present only where someone ran the extraction; the
+  // client falls back to it when the web manifest has no model, and does without it otherwise.
+  skinsLocal: 'skins-local.json',
+  // The operator image library extracted from the LOCAL game client (tools/skin-library/, extract.py `--only
+  // library`): `tiers.avatar|portrait|illust` → client asset id → { path, w, h, charId, skinId }. Covers every
+  // operator the client ships (not only the ones a catalogue lists), which is what lets a 自选编队 operator outside
+  // the mode's roster show its skins. Absent on a server without a client.
+  library: 'library-index.json',
   // Optional art extracted from a local game client (DESIGN §13): { groups: { '<subdir>': { name: { path, w, h } } } }.
   // The emotes and the 玩法说明 pages are in data/assets.json too (downloaded from the mirror): artUrls().
   local: 'local-assets.json',
@@ -103,6 +115,15 @@ export const ART_MANIFEST_TIMEOUT_MS = 8000;
 
 /** Manifests the emote button waits on. A hang here used to leave every cell blank (GitHub #99). */
 const ART_MANIFESTS = new Set(['local', 'assets']);
+
+/**
+ * Manifests that only exist where someone ran the local-client extraction (docs/SKINS.md). A server without one
+ * legitimately 404s them, so the absence is not worth a console warning — a player seeing three `[data] … unavailable`
+ * lines at boot would read them as a fault rather than as the optional feature they are. The feature degrades to the
+ * mirror's assets, which is the documented behaviour.
+ */
+const OPTIONAL_MANIFESTS = new Set(['local', 'assets', 'skinsLocal', 'library']);
+
 
 /**
  * A failed load worth retrying: the request itself failed (network error) or the server answered 5xx / 408 / 429 — not a
@@ -224,7 +245,7 @@ export function createDataStore(opts = {}) {
             break;
           }
           if (current) {
-            if (!warned.has(name)) {
+            if (!warned.has(name) && !OPTIONAL_MANIFESTS.has(name)) {
               warned.add(name);
               console.warn(`[data] ${urlFor(name)} unavailable (${err?.message || err}); continuing without it`);
             }

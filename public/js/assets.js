@@ -69,7 +69,21 @@ export function avatarUrl(m, id, opts) {
     rec = get(get(m, 'chars'), base);
     if (rec && /_2$/.test(s)) e2 = true;
   }
-  if (rec) return str(e2 && rec.avatarE2) || str(rec.avatar) || null;
+  if (rec) {
+    // 皮肤 (docs/SKINS.md): a skin may ship its own avatar. `opts.skin` is a skinId; the LOCAL extraction is asked
+    // first (it is the source spineEntry prefers), then the mirror, and a skin neither has falls back to the
+    // operator's own avatar rather than failing. The avatar is the one part the local client does not yield, so
+    // data/skins-local.json carries a downloaded copy for a skin whose model came from the client.
+    if (opts && str(opts.skin)) {
+      const wanted = String(opts.skin);
+      const localSkin = get(get(get(opts.localSkins, 'chars'), s), 'skins');
+      const localAvatar = localSkin ? get(localSkin, wanted) : null;
+      if (localAvatar && str(localAvatar.avatar)) return str(localAvatar.avatar);
+      const skin = get(get(rec, 'skins'), wanted);
+      if (skin && str(skin.avatar)) return str(skin.avatar);
+    }
+    return str(e2 && rec.avatarE2) || str(rec.avatar) || null;
+  }
   return null;
 }
 
@@ -152,9 +166,32 @@ export function spineEntry(m, id, opts) {
   const s = str(id);
   if (!s) return null;
   const ch = get(get(m, 'chars'), s) || get(get(m, 'chars'), baseCharId(s));
-  if (ch && isObj(ch.spine)) {
-    const sp = (opts && opts.back && isObj(ch.spine.back)) ? ch.spine.back : ch.spine.front;
-    return validSpine(sp) ? sp : null;
+  if (ch) {
+    // 皮肤 (docs/SKINS.md): a chosen skin replaces the operator's own model. Two sources, and the LOCAL client comes
+    // first when this install has it (tools/local-extract/extract.py): it is the game's own bytes and the only source
+    // that cannot vanish with an upstream repository — the fexli mirror has already lost two models. The mirror
+    // (data/assets.json) is the fallback, and the operator's own model the last resort.
+    const wanted = opts && str(opts.skin) ? String(opts.skin) : null;
+    if (wanted) {
+      const localSkin = get(get(get(opts && opts.localSkins, 'chars'), s), 'skins');
+      const lsp = localSkin ? get(localSkin, wanted) : null;
+      if (isObj(lsp) && isObj(lsp.spine)) {
+        const lsrc = (opts && opts.back && isObj(lsp.spine.back)) ? lsp.spine.back : lsp.spine.front;
+        const entry = localSpineEntry(lsrc, opts && opts.local);
+        if (entry) return entry;
+      }
+      const skin = get(get(ch, 'skins'), wanted);
+      if (skin && isObj(skin.spine)) {
+        const sp = (opts && opts.back && isObj(skin.spine.back)) ? skin.spine.back : skin.spine.front;
+        if (validSpine(sp)) return sp;
+      }
+    }
+    // no model for that skin anywhere (or no skin asked for): the operator's own model
+    const src = ch.spine;
+    if (isObj(src)) {
+      const sp = (opts && opts.back && isObj(src.back)) ? src.back : src.front;
+      return validSpine(sp) ? sp : null;
+    }
   }
   const tk = get(get(m, 'tokens'), s);
   if (tk) {
@@ -199,10 +236,13 @@ export function localSpineEntry(sl, local, web) {
   return entry;
 }
 
-/** Whether an operator/token/enemy has a Back model. */
-export function hasBackSpine(m, id) {
+/** Whether an operator/token/enemy has a Back model. `skinId` asks about an installed skin (docs/SKINS.md). */
+export function hasBackSpine(m, id, skinId) {
   const ch = get(get(m, 'chars'), str(id) || '') || get(get(m, 'chars'), baseCharId(id) || '');
-  return !!(ch && isObj(ch.spine) && validSpine(ch.spine.back));
+  if (!ch) return false;
+  const skin = str(skinId) ? get(get(ch, 'skins'), skinId) : null;
+  const src = (skin && isObj(skin.spine)) ? skin.spine : ch.spine;
+  return !!(isObj(src) && validSpine(src.back));
 }
 
 export function validSpine(sp) {
@@ -210,8 +250,8 @@ export function validSpine(sp) {
 }
 
 /** Best 2D picture for a unit asset id (operator avatar, token avatar, enemy icon, item icon). */
-export function unitPictureUrl(m, id) {
-  return avatarUrl(m, id) || tokenAvatarUrl(m, id) || enemyIconUrl(m, id) || itemIconUrl(m, id) || null;
+export function unitPictureUrl(m, id, opts) {
+  return avatarUrl(m, id, opts) || tokenAvatarUrl(m, id) || enemyIconUrl(m, id) || itemIconUrl(m, id) || null;
 }
 
 // ---- audio ---------------------------------------------------------------------------------------------------
@@ -725,8 +765,13 @@ export function createAssets(options) {
   const opts = options && typeof options === 'object' ? options : {};
   const url = opts.url || '/data/assets.json';
   const localUrl = opts.localUrl || '/data/local-assets.json';
+  const localSkinsUrl = opts.localSkinsUrl || '/data/skins-local.json';
   let localPromise = isObj(opts.localManifest) ? Promise.resolve(opts.localManifest) : null;
   let localManifest = isObj(opts.localManifest) ? opts.localManifest : null;
+  // Skin models extracted from the local game client (data/skins-local.json): optional exactly like localManifest,
+  // and the last resort for a skin the web manifest has no model for (docs/SKINS.md).
+  let localSkins = isObj(opts.localSkinsManifest) ? opts.localSkinsManifest : null;
+  let localSkinsPromise = null;
   const doFetch = opts.fetch || ((...a) => globalThis.fetch(...a));
   let manifest = isObj(opts.manifest) ? opts.manifest : null;
   let readyPromise = manifest ? Promise.resolve(manifest) : null;
@@ -856,6 +901,22 @@ export function createAssets(options) {
     return e.promise;
   }
 
+  /** Optional local-client SKIN manifest (data/skins-local.json; null when absent). Fetched once, lazily. */
+  function localSkinsLoad() {
+    if (!localSkinsPromise) {
+      localSkinsPromise = (async () => {
+        try {
+          const res = await doFetch(localSkinsUrl, { cache: 'no-cache' });
+          if (!res || !res.ok) return localSkins;
+          const json = await res.json();
+          if (!localSkins && isObj(json) && isObj(json.chars)) { localSkins = json; notify('local'); }
+        } catch { /* optional: absent */ }
+        return localSkins;
+      })();
+    }
+    return localSkinsPromise;
+  }
+
   /** Optional local-client art manifest (null when absent: every consumer falls back). Fetched once (or seeded). */
   function local() {
     if (!localPromise) {
@@ -876,6 +937,7 @@ export function createAssets(options) {
   return {
     ready,
     local,
+    localSkins: localSkinsLoad,
     /**
      * Adopt the game data's copy of /data/assets.json (data.js 'assets', already loaded by the match screen) unless a
      * manifest is loaded: no second download, nothing to wait for. Returns whether it was adopted.
@@ -898,7 +960,7 @@ export function createAssets(options) {
     localUrl: (group, name) => localAssetUrl(localManifest, group, name),
     get manifest() { return manifest; },
     get loaded() { return !!manifest; },
-    avatar: (id, o) => avatarUrl(m(), id, o),
+    avatar: (id, o) => avatarUrl(m(), id, localSkins ? { ...o, localSkins } : o),
     portrait: (id, o) => portraitUrl(m(), id, o),
     enemyIcon: (id) => enemyIconUrl(m(), id),
     tokenAvatar: (id) => tokenAvatarUrl(m(), id),
@@ -909,9 +971,13 @@ export function createAssets(options) {
     profIcon: (p, kind) => profIconUrl(m(), p, kind),
     subProfIcon: (s) => subProfIconUrl(m(), s),
     ui: (name) => uiUrl(m(), name),
-    picture: (id) => unitPictureUrl(m(), id),
-    spineEntry: (id, o) => spineEntry(m(), id, localManifest ? { ...o, local: localManifest } : o),
-    hasBack: (id) => hasBackSpine(m(), id),
+    picture: (id, o) => unitPictureUrl(m(), id, localSkins ? { ...o, localSkins } : o),
+    spineEntry: (id, o) => spineEntry(m(), id, {
+      ...o,
+      ...(localManifest ? { local: localManifest } : null),
+      ...(localSkins ? { localSkins } : null),
+    }),
+    hasBack: (id, skinId) => hasBackSpine(m(), id, skinId),
     audio: {
       bgm: (kind) => bgmEntry(m(), kind),
       sfx: (group, key) => sfxUrl(m(), group, key),

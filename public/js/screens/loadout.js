@@ -49,6 +49,9 @@ import { diyCount, sanitizeDiyPicks, setPick, serializeDiy, parseDiyImport, DIY_
 import { t, tParts, N_ } from '../../../shared/i18n.js';
 import { copyText } from '../ui/clipboard.js';
 import { toast } from '../ui/toasts.js';
+// 皮肤 (docs/SKINS.md): a self-contained section — everything it does lives in ui/skinPicker.js, so this screen
+// only names it. That matters because this file is one upstream is likely to rewrite.
+import { SkinSection } from '../ui/skinPicker.js';
 
 export { openLoadout, closeLoadout };
 
@@ -338,7 +341,9 @@ function Detail({ m, chess, golden, entries, ops = {}, onChange, onOps, onReset,
     </div>
     <div class="lo-detail__body" ref=${bodyRef}>
       <${OperatorVoice} charId=${chess.charId} />
-      <${CultivationSection} charId=${chess.charId} ops=${ops} onSet=${onOps} standIn=${notOwned} />
+      ${/* 皮肤 first, 潜能与练度 last: a skill and a module are usually left on their defaults, the appearance is what a
+           player comes here to change, and the two 潜能 / 练度 selects are a one-off set-and-forget (docs/SKINS.md). */ null}
+      <${SkinSection} chess=${chess} />
       <${LoadoutGarrisons} chess=${level === 'elite' && golden ? golden : chess} m=${m} />
       <section class="lo-sec">
         <header class="lo-sec__head">
@@ -375,6 +380,7 @@ function Detail({ m, chess, golden, entries, ops = {}, onChange, onOps, onReset,
       </section>` : null}
       ${notOwned ? html`<p class="lo-locknote lo-locknote--standin" data-testid="loadout-standin-note"><${Icon} name="info" />${standInName(chess) ? t('干员持有中标记为未持有：此棋子由替补干员 {name} 上场，技能与模组固定（补位干员技能不可更改）；这里的调配在改回「持有」后生效', { name: standInName(chess) })
         : t('干员持有中标记为未持有：此棋子由替补干员上场，技能与模组固定（补位干员技能不可更改）；这里的调配在改回「持有」后生效')}</p>` : null}
+      <${CultivationSection} charId=${chess.charId} ops=${ops} onSet=${onOps} standIn=${notOwned} />
       ${locked ? html`<p class="lo-locknote"><${Icon} name="info" />${t('本局的调配已锁定，修改将在下一局生效')}</p>` : null}
     </div>
   </aside>`;

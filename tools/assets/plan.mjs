@@ -133,14 +133,14 @@ const ARTS_GROUPS = Object.freeze({
  * @param {string|string[]} urls
  * @param {number} [bytes] expected size
  */
-function alt(rel, urls, bytes) {
+export function alt(rel, urls, bytes) {
   const a = { rel, urls: [].concat(urls).filter((u) => typeof u === 'string' && u), kind: kindOf(rel) };
   if (Number.isInteger(bytes) && bytes > 0) a.bytes = bytes;
   return a;
 }
 
 /** A leaf with the given alternatives (null alternatives are dropped). */
-function leaf(...alts) {
+export function leaf(...alts) {
   const list = alts.flat().filter((a) => a && a.urls && a.urls.length);
   return list.length ? { alts: list } : null;
 }
@@ -188,6 +188,34 @@ function bytesOf(rec, url) {
 /** Local file stem for a skeleton URL or file name ('…/char_102_texas.skel' → 'char_102_texas'). */
 function skelStem(urlOrName) {
   return safeName(urlBase(urlOrName).replace(/\.skel$/i, ''));
+}
+
+/**
+ * The `plan.models` definition for one fexli source record (skel + atlas + page PNGs, all under `dir`).
+ *
+ * Exported because tools/install-skins.mjs builds a skin model exactly the way the full plan does — if the two
+ * ever drifted, an installed skin would download a different file set than a rebuilt manifest expects.
+ * @param {string} key unique model key (plan.models key)
+ * @param {string} kind 'op' | 'enemy' | 'token'
+ * @param {string} dir local directory under public/assets (trailing slash)
+ * @param {{skel?:any, atlas?:any, png?:any}} rec research record: `{url,bytes}` | url | url[]
+ * @param {number[]} skillIndices skill clip indices to resolve animation roles for
+ * @returns {object|null} null when the record is missing any of the three parts
+ */
+export function fexliModelDef(key, kind, dir, rec, skillIndices) {
+  // arrays are candidate folders (same order for all three)
+  const us = (x) => (Array.isArray(x) ? x : [typeof x === 'string' ? x : x?.url]).filter((v) => typeof v === 'string' && v);
+  const b = (x) => (x && typeof x === 'object' && !Array.isArray(x) ? x.bytes : undefined);
+  if (!us(rec?.skel).length || !us(rec?.atlas).length || !us(rec?.png).length) return null;
+  const stem = skelStem(us(rec.skel)[0]);
+  return {
+    key, kind, dir, pma: false, skillIndices,
+    baseUrl: urlDir(us(rec.atlas)[0]),
+    skel: alt(`${dir}${stem}.skel`, us(rec.skel), b(rec.skel)),
+    // pixi-spine finds the atlas by swapping the .skel extension: keep the same stem.
+    atlas: { ...alt(`${dir}${stem}.atlas`, us(rec.atlas), b(rec.atlas)), mutable: true },
+    pngs: [alt(dir + safeName(urlBase(us(rec.png)[0])), us(rec.png), b(rec.png))],
+  };
 }
 
 /** Collect every enemy key referenced under a wave/branch structure. */
@@ -301,7 +329,6 @@ export function collectEnemyIds({ assets07, enemies05, maps05, ops03 }) {
  * @param {any} p.ops03 docs/research/03-operators.json
  * @param {any} p.enemies05 docs/research/05-enemies.json
  * @param {any} p.maps05 docs/research/05-maps.json
- * @param {ReturnType<import('./audio.mjs').indexAudio>} p.audio indexed audio_data.json
  * @param {any} p.modelsData Ark-Models models_data.json
  * @param {any} [p.charword] parsed excel/charword_table.json — the operators' official voice slots (voice, voiceJp)
  * @param {string} [p.voiceLang] voice dump of `audio.voice` (the 中文 setting): cn (default) | jp | en | kr — `audio.voiceJp`
@@ -310,6 +337,9 @@ export function collectEnemyIds({ assets07, enemies05, maps05, ops03 }) {
  * @param {Iterable<string>|null} [p.voiceSlots] which voice slots to plan: VOICE_BATTLE_SLOTS (default) plans only the
  *   lines a battle can play, null plans every slot of audio.mjs VOICE_SLOTS (`--voice-all`). The prep-only slots
  *   (干员报到 / 编入队伍 / 任命队长) are never requested by the client and cost 360 files / 19.3 MB of downloads.
+ * @param {any} [p.skins08] docs/research/08-skins.json — the operator skin catalogue (docs/SKINS.md)
+ * @param {Set<string>} [p.skinsInstalled] skinIds this install actually has (data/skins-installed.json). Only these
+ *   are planned, so the manifest never points at a skin whose files were never fetched; absent = none installed.
  * @param {string[]} [p.extraEnemyIds] more enemy ids that can spawn (e.g. keys of data/enemies.json)
  * @param {string[]} [p.extraTokenIds] more token ids (e.g. token_* keys of data/tokens.json)
  * @param {Record<string,string>} [p.extraHandbook] enemyId → handbook/model id (e.g. from data/bosses.json)
@@ -327,7 +357,7 @@ export function collectEnemyIds({ assets07, enemies05, maps05, ops03 }) {
  * @returns {{ template: any, models: Map<string, any>, notes: string[] }}
  */
 export function buildPlan({ assets07, ops03, enemies05, maps05, audio, modelsData, charword = null, voiceLang = 'cn',
-  voiceJp = true, voiceSlots = VOICE_BATTLE_SLOTS,
+  voiceJp = true, voiceSlots = VOICE_BATTLE_SLOTS, skins08 = null, skinsInstalled = null,
   extraEnemyIds = [], extraTokenIds = [], extraHandbook = {}, localEnemySpines = {}, localTokenSpines = {}, extraOperators = {},
   moduleTypes = [] }) {
   const notes = [];
@@ -338,19 +368,8 @@ export function buildPlan({ assets07, ops03, enemies05, maps05, audio, modelsDat
   // --- Spine model helpers -------------------------------------------------
   const addModel = (key, def) => { if (!models.has(key)) models.set(key, { key, ...def }); return { model: key }; };
   const fexliModel = (key, kind, dir, rec, skillIndices) => {
-    // rec: 07 { skel:{url,bytes}|url|url[], atlas, png } — arrays are candidate folders (same order for all three)
-    const us = (x) => (Array.isArray(x) ? x : [typeof x === 'string' ? x : x?.url]).filter((v) => typeof v === 'string' && v);
-    const b = (x) => (x && typeof x === 'object' && !Array.isArray(x) ? x.bytes : undefined);
-    if (!us(rec?.skel).length || !us(rec?.atlas).length || !us(rec?.png).length) return null;
-    const stem = skelStem(us(rec.skel)[0]);
-    return addModel(key, {
-      kind, dir, pma: false, skillIndices,
-      baseUrl: urlDir(us(rec.atlas)[0]),
-      skel: alt(`${dir}${stem}.skel`, us(rec.skel), b(rec.skel)),
-      // pixi-spine finds the atlas by swapping the .skel extension: keep the same stem.
-      atlas: { ...alt(`${dir}${stem}.atlas`, us(rec.atlas), b(rec.atlas)), mutable: true },
-      pngs: [alt(dir + safeName(urlBase(us(rec.png)[0])), us(rec.png), b(rec.png))],
-    });
+    const def = fexliModelDef(key, kind, dir, rec, skillIndices);
+    return def ? addModel(def.key, def) : null;
   };
 
   // --- operators -----------------------------------------------------------
@@ -379,6 +398,35 @@ export function buildPlan({ assets07, ops03, enemies05, maps05, audio, modelsDat
     if (front) c.spine.front = front; else notes.push(`${id}: no Front battle Spine in research data`);
     const back = fexliModel(`op:${id}:back`, 'op', `spine/op/${id}/back/`, o.battleSpine?.back, idx);
     if (back) c.spine.back = back;
+    // 干员皮肤 (docs/SKINS.md): per operator, keyed by the official skinId — an avatar plus a Front/Back Spine pair.
+    // Every skin model is registered in `models` on purpose: tools/assets/spine.mjs resolves its animation roles
+    // offline there (resolveRoles) and the client's validSpine() requires `anims`. A skin model that skipped that
+    // step would fail to load and silently leave the unit on its placeholder avatar — a failure invisible until
+    // someone looks at the board, so registering them here is not optional.
+    const skinList = skins08?.skins?.[id];
+    if (skinList?.length) {
+      const skins = {};
+      for (const sk of skinList) {
+        // 默认不装皮肤 (docs/SKINS.md): only what data/skins-installed.json lists is built, so a fresh install
+        // downloads no skins at all (they are ~1.1 MB each, 190 MB for the set). The rest stay available in
+        // docs/research/08-skins.json and tools/install-skins.mjs installs them on demand. `null` means "none".
+        if (!skinsInstalled || !skinsInstalled.has(sk.skinId)) continue;
+        const entry = {};
+        const dir = `spine/op/${id}/${sk.stem}/`;
+        const sfront = fexliModel(`skin:${sk.stem}:front`, 'op', `${dir}front/`, sk.battleSpine?.front, idx);
+        if (!sfront) { notes.push(`${sk.skinId}: no Front skin Spine in research data`); continue; }
+        entry.spine = { front: sfront };
+        const sback = fexliModel(`skin:${sk.stem}:back`, 'op', `${dir}back/`, sk.battleSpine?.back, idx);
+        if (sback) entry.spine.back = sback;
+        // 180×180 avatar rather than the full skin art: that one is ~2.5 MB each (435 MB for the whole set).
+        // `stem` is already filename-safe (skinId with @ and # turned into _), so it needs no sanitizing.
+        if (sk.avatar?.url) entry.avatar = leaf(alt(`char/avatar/skin/${sk.stem}.png`, sk.avatar.url, sk.avatar.bytes));
+        entry.name = sk.name;
+        entry.group = sk.group;
+        skins[sk.skinId] = entry;
+      }
+      if (Object.keys(skins).length) c.skins = skins;
+    }
     chars[id] = c;
     // skill icons (+ skill SFX) of every skill index; normal-mode attack / impact sounds only (a ranged operator's own
     // projectile banks projectile_chr_<name> as fallbacks — user playtest #4 item 6, audio.mjs pickUnitSfx)

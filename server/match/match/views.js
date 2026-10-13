@@ -114,6 +114,10 @@ export class MatchViews {
         fieldId: this.fieldOf(ps),
         status: this.statusOf(ps),
         autoplay: ps.autoplay,
+        // 干员皮肤 (docs/SKINS.md): public on purpose — this is how a teammate sees your skin, and the reason the
+        // renderer reads info.skin off the unit rather than off the local player. Omitted when empty, which is the
+        // normal case: skins are installed one at a time, on demand, and most players install none.
+        ...(Object.keys(ps.skins).length ? { skins: ps.skins } : {}),
         // the LP this round's own battle will cost at settlement so far (COMBAT / 联防 only, omitted when 0)
         ...this._pendingLpView(ps),
       })),
@@ -292,6 +296,9 @@ export class MatchViews {
         standInFor: rec && rec.standInFor ? rec.standInFor : undefined,
         diy: this._diyInfo(ps, piece),
         ...cultivationInfo(lo),
+        // 皮肤 (docs/SKINS.md): built per player (ownerId above), so a scouted teammate's board shows THEIR skin.
+        // Base id first: the skin chosen before a merge survives it instead of reverting to the default model.
+        skin: piece.kind === 'chess' ? (ps.skins[chess?.baseId || piece.id] || ps.skins[piece.id]) : undefined,
       });
     }
     return units;
@@ -356,6 +363,9 @@ export class MatchViews {
         standInFor: standIn && standIn.standInFor ? standIn.standInFor : undefined,
         diy: this._diyInfo(ps, piece),
         ...cultivationInfo(lo),
+        // 皮肤 (docs/SKINS.md): built per player, so a scouted teammate's hand shows THEIR skin; base id first, so a
+        // golden (merged) piece keeps the choice made before the merge
+        skin: piece.kind === 'chess' ? (ps.skins[rec?.baseId || piece.id] || ps.skins[piece.id]) : undefined,
       });
     };
     for (let i = 0; i < ps.hand.length; i++) {

@@ -56,7 +56,10 @@ import argparse
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
+from urllib.parse import quote
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -248,6 +251,21 @@ def spine_ids(only, sub, ids):
         return list(ids)
     return [i for i in ids if any(f'{sub}/{i}' == p.rstrip('/') or f'{sub}/{i}'.startswith(p.rstrip('/') + '/')
                                   for p in only)]
+
+
+def skin_ids(only, stems):
+    """The operator-skin stems that run: None = none selected, [] = the whole installed set, else only those named.
+
+    `--skin <stem>` selects explicitly whatever `--only` says; without it the whole installed set runs when `--only`
+    covers `spine/op` (or is empty), and nothing runs otherwise."""
+    if stems:
+        return list(stems)
+    if not wants_sub(only, SKIN_SPINE_SUB):
+        return None
+    if not only or any(SKIN_SPINE_SUB == p.rstrip('/') or SKIN_SPINE_SUB.startswith(p.rstrip('/') + '/')
+                       or p.rstrip('/').startswith(SKIN_SPINE_SUB + '/') for p in only):
+        return []
+    return None
 
 
 def prefab_spine_nodes(root, objects):
@@ -448,7 +466,7 @@ def run_derived(out_root, sub, manifest, log):
         except Exception as e:  # a broken source only drops the derived map (the renderer falls back)
             log(f'  warn derived {name}: {e}')
             continue
-        manifest.setdefault(sub, {})[name] = {'path': f'/assets/local/{sub}/{name}.png', 'w': img.width, 'h': img.height,
+        manifest.setdefault(sub, {})[name] = {'path': asset_url(*sub.split('/'), f'{name}.png'), 'w': img.width, 'h': img.height,
                                               'kind': 'Derived', 'from': src, 'derive': kind}
         n += 1
     return n
@@ -470,7 +488,7 @@ def run_webp(out_root, sub, manifest, log):
         except Exception as e:  # no WebP support in this Pillow, or a broken PNG: the entry keeps the PNG
             log(f'  warn webp {name}: {e}')
             continue
-        entry.update(path=f'/assets/local/{sub}/{dst.name}', webp=mode)
+        entry.update(path=asset_url(*sub.split('/'), dst.name), webp=mode)
         n += 1
     return n
 
@@ -543,7 +561,7 @@ def export_bundle(ab_root, job, out_root, manifest, log):
                 img.save(out_dir / fname)
                 seen.add(fname)
                 manifest.setdefault(sub, {})[name] = {
-                    'path': f'/assets/local/{sub}/{fname}', 'w': img.width, 'h': img.height, 'kind': t}
+                    'path': asset_url(*sub.split('/'), fname), 'w': img.width, 'h': img.height, 'kind': t}
                 n += 1
             elif t == 'TextAsset':
                 raw = data.m_Script
@@ -555,7 +573,7 @@ def export_bundle(ab_root, job, out_root, manifest, log):
                 else:
                     fname = name + '.skel'
                 (out_dir / fname).write_bytes(blob)
-                manifest.setdefault(sub, {})[fname] = {'path': f'/assets/local/{sub}/{fname}', 'kind': t}
+                manifest.setdefault(sub, {})[fname] = {'path': asset_url(*sub.split('/'), fname), 'kind': t}
                 n += 1
             elif t == 'Mesh':
                 text = data.export()
@@ -567,7 +585,7 @@ def export_bundle(ab_root, job, out_root, manifest, log):
                 (out_dir / fname).write_text(text, encoding='utf-8')
                 seen.add(fname)
                 verts = sum(1 for line in text.splitlines() if line.startswith('v '))
-                manifest.setdefault(sub, {})[name] = {'path': f'/assets/local/{sub}/{fname}', 'kind': 'Mesh', 'verts': verts}
+                manifest.setdefault(sub, {})[name] = {'path': asset_url(*sub.split('/'), fname), 'kind': 'Mesh', 'verts': verts}
                 mesh_keys[obj.path_id] = name
                 n += 1
             elif t == 'Material':
@@ -589,7 +607,7 @@ def export_bundle(ab_root, job, out_root, manifest, log):
         else:
             payload = dict(sorted(payload.items()))
         (out_dir / fname).write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
-        manifest.setdefault(sub, {})[key] = {'path': f'/assets/local/{sub}/{fname}', 'kind': key.capitalize(), 'count': len(payload)}
+        manifest.setdefault(sub, {})[key] = {'path': asset_url(*sub.split('/'), fname), 'kind': key.capitalize(), 'count': len(payload)}
         n += 1
     n += run_derived(out_root, sub, manifest, log)
     log(f'{rel}: {n} files -> {sub}')
@@ -668,6 +686,26 @@ def normalize_atlas(text, sizes):
     return '\n'.join(out)
 
 
+def page_filename(name):
+    """A page file name that is safe in a URL. The client names a skin page `<charId>_<series>#<n>.png`, and the page
+    name is the one string this project cannot percent-encode: pixi-spine reads it out of the .atlas text and resolves it
+    against the atlas URL itself (the `textures` of the manifest are never consulted), so a bare `#` reaches the loader,
+    which strips everything from `#` on before it picks a parser — the URL left (`..._epoque`) has no `.png`, no image
+    parser matches it, `load()` resolves null and no request is even made; pixi-spine then reads `.baseTexture` of that
+    null and the whole model fails. `?` (a query) and `%` (an escape) break a page URL the same way, so they map too.
+    The `#` becomes `_`, which is the stem the .skel/.atlas of the same model already use."""
+    return re.sub(r'[#?%]', '_', name)
+
+
+def url_safe_atlas(atlas, pages):
+    """The atlas text and its `page name → image` map with every page name made URL-safe (page_filename). The two must
+    change together: the client resolves a page by the name the atlas gives it, so a renamed file with an unrenamed page
+    line (or the reverse) 404s. Returns (text, pages)."""
+    lines = atlas.replace('\r\n', '\n').replace('\r', '\n').lstrip('\ufeff').split('\n')
+    out = [page_filename(line.strip()) if _is_page_line(lines, i) else line for i, line in enumerate(lines)]
+    return '\n'.join(out), {page_filename(p): img for p, img in pages.items()}
+
+
 def write_spine(objects, sda, sub, name, out_root, manifest, log):
     """Write one Spine model of a SkeletonDataAsset type tree — its skeleton TextAsset, its atlas TextAsset(s) (sized,
     `pma: true`: normalize_atlas) and the page textures of the atlas materials (_MainTex with its _AlphaTex merged in,
@@ -708,6 +746,7 @@ def write_spine(objects, sda, sub, name, out_root, manifest, log):
         log(f'  warn {name}: atlas or page textures missing')
         return 0
     atlas = texts[0] if len(texts) == 1 else '\n\n'.join(t.strip('\n') for t in texts) + '\n'
+    atlas, pages = url_safe_atlas(atlas, pages)  # a `#` in a page name would never survive a URL (page_filename)
     names = atlas_pages(atlas)
     if set(names) != set(pages):
         if len(names) != 1 or len(pages) != 1:
@@ -718,12 +757,13 @@ def write_spine(objects, sda, sub, name, out_root, manifest, log):
              f'{stem}.atlas': normalize_atlas(atlas, {p: img.size for p, img in pages.items()}).encode('utf-8')}
     out_dir = Path(out_root) / sub
     out_dir.mkdir(parents=True, exist_ok=True)
+    segs = sub.split('/')
     for fname, blob in files.items():
         (out_dir / fname).write_bytes(blob)
-        manifest.setdefault(sub, {})[fname] = {'path': f'/assets/local/{sub}/{fname}', 'kind': 'TextAsset'}
+        manifest.setdefault(sub, {})[fname] = {'path': asset_url(*segs, fname), 'kind': 'TextAsset'}
     for fname, img in pages.items():
         img.save(out_dir / fname)
-        manifest.setdefault(sub, {})[fname] = {'path': f'/assets/local/{sub}/{fname}', 'w': img.width, 'h': img.height,
+        manifest.setdefault(sub, {})[fname] = {'path': asset_url(*segs, fname), 'w': img.width, 'h': img.height,
                                                'kind': 'Texture2D'}
     return len(files) + len(pages)
 
@@ -834,6 +874,906 @@ def export_token_spines(ab_root, out_root, manifest, log, ids=None):
     return n
 
 
+# ---------------------------------------------------------------------------------------------------
+# Operator skins (docs/SKINS.md): the local client is the authoritative source, so a skin's battle
+# model can be taken from the installed game instead of the fexli mirror.
+#
+# The client keeps one bundle per operator under skinpack/<charId>.ab holding EVERY skin of that
+# operator, and three models per skin — told apart by the skeleton's own name and its page texture:
+#   char_<charId>_<series>#<n>       battle chibi, the model the remake draws (512×512 or smaller)
+#   build_char_<charId>_<series>#<n> the base/dormitory chibi (own name prefix, larger page)
+#   char_<charId>_<series>#<n>b      the dynamic illustration (name suffix `b`, up to 2048×2048)
+# A skin has two battle chibis of the same stem (Front and Back — the facing variants) sharing one page
+# texture, which is written once and listed in both.
+# ---------------------------------------------------------------------------------------------------
+SKIN_PACK = 'skinpack/{}' + '.ab'
+SKIN_SPINE_SUB = 'spine/op'
+
+
+def skin_stem_of(skel_name):
+    """The skin stem of a battle-chibi skeleton name, or None for the build / illustration variants."""
+    if not skel_name.endswith('.skel'):
+        return None
+    stem = skel_name[:-len('.skel')]
+    if stem.startswith('build_') or stem.endswith('b'):
+        return None
+    return stem
+
+
+def standing_page(tt, objects):
+    """The largest atlas page a SkeletonDataAsset draws from, or 0 when it cannot be read.
+
+    This is what tells a battle chibi from the two kinds of skeleton that share its file name in the same bundle:
+    a STANDING chibi is drawn from a 300-600 px page, while a `build_` display model and the dynamic-illustration
+    skeleton use 592-1124 px pages. The distinction is load-bearing — see facings_of.
+    """
+    best = 0
+    for ref in (tt.get('atlasAssets') or []):
+        ao = _pptr_obj(objects, ref)
+        if ao is None:
+            continue
+        try:
+            att = ao.read_typetree()
+        except Exception:
+            continue
+        for mref in (att.get('materials') or []):
+            mo = _pptr_obj(objects, mref)
+            if mo is None:
+                continue
+            try:
+                mtt = mo.read_typetree()
+            except Exception:
+                continue
+            props = mtt.get('m_SavedProperties') or {}
+            for pair in (props.get('m_TexEnvs') or []):
+                # UnityPy hands m_TexEnvs over as (name, value) tuples, not dicts
+                if not isinstance(pair, (list, tuple)) or len(pair) != 2:
+                    continue
+                if pair[0] != '_MainTex':
+                    continue
+                val = pair[1] or {}
+                to = _pptr_obj(objects, val.get('m_Texture') or {})
+                if to is None:
+                    continue
+                try:
+                    best = max(best, int(getattr(to.read(), 'm_Width', 0) or 0))
+                except Exception:
+                    pass
+    return best
+
+
+def facings_of(refs, log=None, skin_id=None, objects=None):
+    """Which SkeletonDataAsset of a skin is its Front and which its Back, as `[('front', tt|None), ('back', tt|None)]`.
+
+    Three kinds of skeleton share one file name inside a skinpack bundle — the standing chibi drawn in battle, a
+    `build_...` display model, and occasionally a dynamic-illustration skeleton — so the choice cannot be made by name
+    or by bundle order. Two rules, in order:
+
+    1. A standing chibi draws from a 300-600 px page; `build_` and illustration skeletons use 592-1124 px pages.
+       Taking the largest skeleton instead (the first version of this function) picked the ILLUSTRATION for
+       char_1012_skadi2@boc#4, char_291_aglina@boc#1 and three others, which is why those five skins showed a
+       picture where a chibi belongs and had no Back at all.
+    2. Of the standing ones, the LARGER skeleton is the Front: the Back carries only the clips a standing, walking
+       chibi needs, and in the web mirror the Back is the smaller of the pair for 167 of 169 skins.
+
+    `refs` are `(typetree, skeleton TextAsset)` pairs, in bundle order. `objects` is the bundle's path_id → object
+    map, needed to read the atlas pages; without it every candidate counts as standing and only rule 2 applies.
+    """
+    usable = [(tt, ta) for tt, ta in refs if tt is not None and ta is not None]
+    if not usable:
+        return [('front', None), ('back', None)]
+
+    def size_of(ta):
+        raw = getattr(ta, 'm_Script', None)
+        if isinstance(raw, (bytes, bytearray)):
+            return len(raw)
+        if isinstance(raw, str):
+            return len(raw.encode('utf-8', 'surrogateescape'))
+        return 0
+
+    standing = usable
+    if objects is not None:
+        kept = []
+        for tt, ta in usable:
+            w = standing_page(tt, objects)
+            # an unreadable page keeps the candidate: dropping it would lose a skin rather than mis-order one
+            if w == 0 or w <= 600:
+                kept.append((tt, ta))
+            elif log is not None:
+                log(f'  note {skin_id}: skipped a {w} px display/illustration skeleton')
+        if kept:
+            standing = kept
+
+    if len(standing) == 1:
+        # the client ships a single standing chibi for this skin: it is the Front, and the renderer draws it for
+        # both facings (there is no Back art to extract — 升华 / 红女爵 / 质素访客 / 夏卉 FA017 / 追悼)
+        return [('front', standing[0][0]), ('back', None)]
+    ordered = sorted(standing, key=lambda p: size_of(p[1]), reverse=True)
+    if log is not None and size_of(ordered[0][1]) == size_of(ordered[1][1]):
+        log(f'  warn {skin_id}: the two facings are the same size; the bundle order decides them')
+    return [('front', ordered[0][0]), ('back', ordered[1][0])]
+
+
+def export_skin_spines(ab_root, out_root, manifest, log, stems=None):
+    """The battle chibi (Front + Back) of every skin listed in data/skins-installed.json, from the local client's
+    skinpack/<charId>.ab. `stems` limits it to those stems (the `skins` job under --only). Output:
+    spine/op/<charId>/<stem>/{front,back}/<stem>.skel|.atlas, the shared page at the skin root; the manifest groups are
+    spine/op/<charId>/<stem>, the group data/assets.json chars[charId].skins[skinId].spineLocal names."""
+    import aklz4  # noqa: F401  (registers the LZ4AK decoder)
+    import UnityPy
+    from UnityPy.helpers.MeshHelper import MeshHandler  # noqa: F401  (UnityPy needs it loaded for some types)
+
+    plan = skin_plan()
+    if not plan:
+        log('skip skins: no data/skins-installed.json or docs/research/08-skins.json')
+        return 0
+    write_skin_index(plan, log)
+    # the committed index is the authority on stem → skinId (the same mapping this plan was built from)
+    index = load_skin_index() or {}
+    if stems is not None:
+        # `--skin <stem>`: exactly those, whenever the client has them (either the catalogue stem or the client's own)
+        plan = {c: [s for s in v if s['stem'] in stems or s['client'] in stems] for c, v in plan.items()}
+        plan = {c: v for c, v in plan.items() if v}
+    n = 0
+    for char_id in sorted(plan):
+        bundle = Path(ab_root) / SKIN_PACK.format(char_id)
+        if not bundle.exists():
+            log(f'  skip {char_id}: {bundle.name} not in this client')
+            continue
+        try:
+            env = UnityPy.load(str(bundle))
+        except Exception as e:
+            log(f'FAIL load {bundle.name}: {e}')
+            continue
+        objects = {o.path_id: o for o in env.objects}
+        # the SkeletonDataAssets of this bundle, keyed by battle-chibi stem (Front and Back share a stem)
+        found = {}
+        for o in env.objects:
+            if o.type.name != 'MonoBehaviour':
+                continue
+            try:
+                tt = o.read_typetree()
+            except Exception:
+                continue
+            if 'skeletonJSON' not in tt:
+                continue
+            skel_obj = _pptr_obj(objects, tt.get('skeletonJSON'))
+            if skel_obj is None:
+                continue
+            try:
+                skel_data = skel_obj.read()
+                skel_name = str(getattr(skel_data, 'm_Name', '') or '')
+            except Exception:
+                continue
+            stem = skin_stem_of(skel_name)
+            if stem:
+                # the TextAsset rides along: its length is what tells the two facings apart (facings_of)
+                found.setdefault(stem, []).append((tt, skel_data))
+        for entry in plan[char_id]:
+            stem, skin_id = entry['stem'], entry['skinId']
+            if index.get(stem) is not None:
+                skin_id = index[stem]
+            refs = found.get(entry['client']) or found.get(stem)
+            if not refs:
+                log(f'  warn {skin_id}: no battle chibi of stem {entry["client"]} in {bundle.name}')
+                continue
+            sub = f'{SKIN_SPINE_SUB}/{char_id}/{stem}'
+            written = 0
+            for tag, tt in facings_of(refs, log, skin_id, objects):
+                if tt is None:
+                    continue
+                k = write_spine(objects, tt, f'{sub}/{tag}', skin_id, out_root, manifest, log)
+                if not k:
+                    continue
+                written += k
+                # one shared page texture: list only the first copy, the second points at it (the client resolves a
+                # relative asset URL, render/spine.js). The PNG is written by whichever variant ran first.
+                group = manifest.get(f'{sub}/{tag}') or {}
+                if tag == 'back':
+                    # both facings share the front's page file, so point the back entries at it
+                    for fname in list(group):
+                        if fname.endswith('.png'):
+                            group[fname]['path'] = asset_url(*sub.split('/'), 'front', fname)
+            if written:
+                n += written
+                log(f'{bundle.relative_to(ab_root).as_posix()}: {skin_id} -> {sub} ({written} files)')
+    draw = write_skin_illustrations(ab_root, out_root, plan, manifest, log, stems)
+    if draw:
+        n += draw
+    # avatars: the client's own bundles first, the mirror only for what this client lacks (normally nothing)
+    avatars = extract_skin_avatars(ab_root, plan, log)
+    avatars.update(fetch_missing_avatars(plan, log))
+    # The 180×360 button art is NOT extracted here: the library's `portrait` tier owns it
+    # (spritepack/char_portrait_<N>.ab → public/assets/local/library/opportrait/), covering every operator the client
+    # ships rather than only the planned skins. `write_skin_manifest` reads its URL back off that index.
+    # The metadata must be current BEFORE the manifest is written: a model it does not know is written without clips,
+    # and the renderer holds those back (see the note below). run_skins_meta regenerates it from the files just written.
+    run_skins_meta(log)
+    write_skin_manifest(out_root, plan, manifest, log, stems, avatars, skin_portraits_from_library(plan, log))
+    return n
+
+
+def _pptr_obj(objects, pptr):
+    """The object a PPtr points at within the same bundle (None for a cross-file or empty reference)."""
+    if not pptr or pptr.get('m_FileID'):
+        return None
+    return objects.get(pptr.get('m_PathID'))
+
+
+# Committed stem → skinId index (tools/assets/local-skin-index.json). The join between the client's model stems and the
+# skin ids is mechanical, so the generator below derives it from 08-skins.json and the extractor writes it here. It sits
+# beside tools/assets/local-enemy-spines.json and local-token-spines.json — the other committed metadata of local-client
+# models — because the tooling that consumes it (tools/, not the shipped game) is the same audience. Deliberately NOT
+# under docs/research/: that directory is the shipped research tables, and a `09-…json` name there would be read as one.
+SKIN_INDEX = ROOT / 'tools/assets/local-skin-index.json'
+
+# The client-side manifest of the extracted skin models (the local counterpart of chars[charId].skins in
+# data/assets.json). data/skins-installed.json is the web downloader's list and cannot describe these: a skin the
+# mirror has lost is never in it, which is the whole reason this source exists. The server reads it at /data/, so it
+# lives under data/ and, like data/local-assets.json, holds machine-local names and is never committed.
+SKIN_MANIFEST = ROOT / 'data/skins-local.json'
+
+# Model metadata (anims / durations / bounds) of those same models, written by tools/local-skins-meta.mjs. The client's
+# validSpine requires `anims`, so the manifest cannot carry a model without it; the parse needs the pixi-spine runtime,
+# which lives in node_modules, so that part is Node's. It sits beside tools/assets/local-enemy-spines.json.
+SKIN_META = ROOT / 'tools/assets/local-skins-meta.json'
+
+# The 180×180 head icons: spritepack/ui_char_avatar_<N>.ab, 19 bundles, 121 icons each (the last holds 24). The
+# bundling manifest arts/charavatars/avatar_hub.ab names the packing tag `UI_CHAR_AVATAR` — that is the bundle stem —
+# declares the standard size 180×180 and lists each id twice (as the sprite name and as `Arts/CharAvatars/[Skins|Elite]/<id>`).
+# Every planned skin is in there, so the avatar needs no network either.
+AVATAR_PACKS = 'spritepack/ui_char_avatar_*.ab'
+AVATAR_DIR = 'char/avatar/skin'
+
+# The 180×360 skin button art (the "big icon" a skin is chosen by) is the LIBRARY's `portrait` tier — see LIBRARY_PORTRAIT
+# below, which owns the bundle glob and the packing manifest. It is one family at one fixed size and covers every
+# operator the client ships, including the default appearance (`<charId>_1` E0/E1, `_2` E2). The alternative,
+# spritepack/arts_shop_skin_portrait_*.ab at 292×552, is a fixed size too but holds only 164 of this mode's 174 skins:
+# the shop gallery never received ten event and collab skins (`@kfc#1`, `@wwf#1`, `@daily#1`, `@race#1`, `@shining#1` …).
+# A census of the whole client — all 13,163 bundles, 104,711 Texture2D — found exactly 443 textures at 292×552, so
+# mixing the two would mean a gallery of two shapes with a hole in it. One family, one size.
+
+# ---- the operator image library (docs/SKINS.md) ------------------------------------------------------------------
+# Every operator's art in the client, extracted ONCE for the whole client rather than only for the skins the mode
+# happens to catalogue. That matters because the catalogue is a hand-maintained research table of 174 skins while the
+# client holds 529, and the 自选编队 pool draws on operators outside the mode's 121-operator roster (煌, 陈 …), whose
+# skins the catalogue never listed — the extractor could not see art it had no id for. Scanning the client answers
+# "which skins exist" without any table.
+#
+# Three tiers, matching the three families the client packs by packing tag (arts/*/*_hub.ab `_rootPackingTag`):
+#
+#   LIBRARY = (
+#     (stem, dir, hub, bundle glob, id keys, size),
+#   )
+#
+# `id keys` are the manifest fields that name a packed asset. char_portrait covers BOTH the default appearance
+# (`<charId>_1` E0/E1, `_2` E2) and every skin at one fixed 180×360 — the same bust crop the 292×552 shop gallery uses
+# but complete (174/174 of the mode's skins against the gallery's 164) and uniform, which is what makes it the button
+# art (public/css/screens/loadout.css).
+LIBRARY_AVATAR = ('avatar', 'opavatar', 'arts/charavatars/avatar_hub.ab', 'spritepack/ui_char_avatar_*.ab',
+                  ('avatarId',), '180x180')
+LIBRARY_PORTRAIT = ('portrait', 'opportrait', 'arts/charportraits/portraits_hub.ab', 'spritepack/char_portrait_*.ab',
+                    ('portraitId', 'spAvatarId'), '180x360')
+# The illustration is NOT packed by a hub: it lives in skinpack/<charId>.ab next to the skin's Spine model, as
+# `<clientStem>b` (static, 1024–1416 px) and `<clientStem>` (the dynamic page, 2200–2508 px, deliberately skipped).
+LIBRARY_ILLUST = ('illust', 'opillust', 'skinpack/<charId>.ab', None, ('illustId', 'spIllustId'), 'variable')
+LIBRARIES = (LIBRARY_AVATAR, LIBRARY_PORTRAIT, LIBRARY_ILLUST)
+LIBRARY_ROOT = 'library'
+# The library's own folder: everything this extractor writes for the operator image library lands under
+# tools/skin-library/ (the index below, plus the generators added alongside it).
+SKIN_LIBRARY_DIR = ROOT / 'tools/skin-library'
+LIBRARY_INDEX = SKIN_LIBRARY_DIR / 'library-index.json'
+# The copy the CLIENT reads: the static server only mounts /data/, so the index is written there too and
+# data/library-index.json is git-ignored like the other machine-local manifests (data/local-assets.json,
+# data/skins-local.json). tools/skin-library/library-index.json is the committed one, so a server without a client can
+# still build the catalogue from it (tools/skin-library/build-catalogue.mjs).
+LIBRARY_DATA_FILE = ROOT / 'data/library-index.json'
+
+
+
+
+
+
+
+def skin_portraits_from_library(plan, log):
+    """{skinId: 180×360 portrait URL} for the planned skins, read off the library index the `library` job wrote.
+
+    The library's `portrait` tier (spritepack/char_portrait_<N>.ab) is the only portrait source: one family, one fixed
+    180×360 size, and it covers every operator the client ships — the 292×552 shop gallery holds only 164 of the 174
+    and does not exist for the rest, so mixing the two would give a gallery of two shapes with a hole in it. Returns {}
+    when the library has not been extracted yet, and the manifest simply carries no portrait for those skins."""
+    try:
+        tiers = json.loads(LIBRARY_INDEX.read_text(encoding='utf-8')).get('tiers') or {}
+    except (OSError, ValueError):
+        log('  note: library index absent, so no portrait URLs (run extract.py --only library first)')
+        return {}
+    wanted = {e['client']: e['skinId'] for entries in plan.values() for e in entries}
+    out = {}
+    for asset_id, entry in (tiers.get('portrait') or {}).items():
+        skin_id = entry.get('skinId')
+        if skin_id and entry.get('path') and asset_id in wanted:
+            out[skin_id] = entry['path']
+    return out
+
+
+def run_skins_meta(log):
+    """Regenerate tools/assets/local-skins-meta.json from the models just written (the Node pass).
+
+    `write_skin_manifest` needs it: the client's `validSpine()` requires the clips, so without metadata a skin is
+    rejected by the renderer. Running it here is what keeps it current — before, nothing did: the script existed but
+    no pipeline called it, so the file stayed at whatever an earlier manual run produced and every skin extracted
+    afterwards was silently dropped from the manifest."""
+    node = shutil.which('node')
+    script = ROOT / 'tools/local-skins-meta.mjs'
+    if not node or not script.exists():
+        log('  warn node or tools/local-skins-meta.mjs unavailable; the manifest keeps its previous metadata')
+        return False
+    try:
+        r = subprocess.run([node, str(script)], cwd=str(ROOT), capture_output=True, text=True, timeout=1800)
+    except (OSError, subprocess.SubprocessError) as e:
+        log(f'  warn skins meta failed ({e})')
+        return False
+    if r.returncode != 0:
+        log(f'  warn skins meta exited {r.returncode}: {(r.stderr or "").strip()[:200]}')
+        return False
+    log(f'  {(r.stdout or "").strip().splitlines()[0] if r.stdout else "skins meta ok"}')
+    return True
+
+
+def load_skin_meta():
+    """{`<charId>/<stem>[/back]`: metadata} from tools/assets/local-skins-meta.json, or {}."""
+    try:
+        return json.loads(SKIN_META.read_text(encoding='utf-8')).get('models') or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def write_skin_manifest(out_root, plan, manifest, log, stems=None, avatars=None, portraits=None):
+    """Write data/skins-local.json: { chars: { charId: { skins: { skinId: { name, group, spine } } } } } for the skins
+    this run actually extracted (every file of the group present in `manifest`). Shape mirrors the web manifest's
+    chars[charId].skins, so public/js/assets.js can fall back to it field by field."""
+    local_root = Path(out_root)
+    research = {}
+    try:
+        research = json.loads((ROOT / 'docs/research/08-skins.json').read_text(encoding='utf-8')).get('skins') or {}
+    except (OSError, ValueError):
+        pass
+    meta = {}  # skinId -> {name, group}
+    for entries in research.values():
+        for s in entries:
+            if s.get('skinId'):
+                meta[s['skinId']] = {'name': s.get('name') or s['skinId'], 'group': s.get('group') or ''}
+    # model metadata from the Node pass (tools/local-skins-meta.mjs), keyed `<charId>/<stem>[/back]`
+    models = load_skin_meta()
+
+    chars = {}
+    avatars = avatars or {}
+    portraits = portraits or {}
+    for char_id in sorted(plan):
+        for entry in plan[char_id]:
+            skin_id, stem = entry['skinId'], entry['stem']
+            if stems is not None and stem not in stems and entry['client'] not in stems:
+                continue
+            groups = {tag: f'{SKIN_SPINE_SUB}/{char_id}/{stem}/{tag}' for tag in ('front', 'back')}
+            present = {tag: g for tag, g in groups.items() if manifest.get(g)}
+            if not present:
+                continue
+            spine = {}
+            for tag, g in present.items():
+                files = manifest[g]
+                skel = next((n for n in files if n.endswith('.skel')), None)
+                atlas = next((n for n in files if n.endswith('.atlas')), None)
+                pages = sorted(n for n in files if n.endswith('.png'))
+                if not skel or not atlas or not pages:
+                    continue
+                # the group + file names LAST: tools/local-skins-meta.mjs keys its entries by absolute paths (it reads
+                # them straight off disk), and only the names belong in a manifest whose group is the directory.
+                # A model whose metadata is missing still gets an entry: `validSpine()` needs the clips, so the
+                # renderer holds it back until run_skins_meta fills them in — but dropping the entry outright would
+                # hide the skin from the picker, which is what a stale metadata file used to do.
+                spine[tag] = {**(models.get(f'{char_id}/{stem}' + ('/back' if tag == 'back' else '')) or {}),
+                              'group': g, 'skel': skel, 'atlas': atlas, 'textures': pages}
+            if not spine:
+                continue
+            # `spine` carries the same front / back shape as chars[charId].spine in data/assets.json (the web
+            # manifest), so the client can fall back to it field by field (public/js/assets.js spineEntry)
+            spine = {'front': spine['front'], **({'back': spine['back']} if 'back' in spine else {})}
+            m = meta.get(skin_id) or {}
+            entry_out = {'name': m.get('name') or skin_id, 'group': m.get('group') or '', 'spine': spine}
+            if avatars.get(skin_id):
+                entry_out['avatar'] = avatars[skin_id]
+            # the 292×552 button art (a fixed size, unlike the illustration) — present for most skins
+            if portraits.get(skin_id):
+                entry_out['portrait'] = portraits[skin_id]
+            # the static illustration (write_skin_illustrations), for the picker's tile art and preview
+            if manifest.get(f'{SKIN_SPINE_SUB}/{char_id}/{stem}', {}).get('illust.png'):
+                entry_out['illust'] = asset_url(*f'{SKIN_SPINE_SUB}/{char_id}/{stem}'.split('/'), 'illust.png')
+            chars.setdefault(char_id, {}).setdefault('skins', {})[skin_id] = entry_out
+    doc = {'version': 1, 'source': 'local-client',
+           'note': 'Operator skin models extracted from the local game client (tools/local-extract/extract.py `skins`); '
+                   'the local counterpart of chars[charId].skins in data/assets.json. Never committed (game art).',
+           'count': sum(len(v.get('skins') or {}) for v in chars.values()), 'chars': chars}
+    SKIN_MANIFEST.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + '\n', encoding='utf-8', newline='\n')
+    log(f'wrote {SKIN_MANIFEST.relative_to(ROOT).as_posix()} ({doc["count"]} skins, {len(chars)} operators)')
+
+
+
+def client_stem(skin_id):
+    """The model stem the CLIENT uses for a skin: the skinId with `@` → `_` and `#` kept
+    (`char_498_inside@kitchen#2` → `char_498_inside_kitchen#2`). docs/research/08-skins.json normalizes `#` to `_` too
+    for URL-safe file names (`stem`), so a lookup from the bundle has to try this form first."""
+    return skin_id.replace('@', '_')
+
+
+def write_skin_index(plan, log):
+    """Write tools/assets/local-skin-index.json: {version, counts, byStem: {stem: skinId}} for every skin of a playable
+    chess. Deterministic — regenerating it from the same catalogue produces the same file."""
+    by_stem = {}
+    for entries in plan.values():
+        for s in entries:
+            by_stem[s['stem']] = s['skinId']
+    doc = {'version': 1, 'counts': {'skins': len(by_stem), 'operators': len(plan)},
+           'note': 'Local-client operator skins (tools/local-extract/extract.py `skins`): the stem → skinId mapping the '
+                   'extractor writes to public/assets/local/spine/op/<charId>/<stem>/ and the build step reads to fill '
+                   'chars[charId].skins[skinId].spineLocal (docs/SKINS.md). Derived from docs/research/08-skins.json — '
+                   'the skins of the playable chess of data/chess.json.',
+           'byStem': dict(sorted(by_stem.items()))}
+    SKIN_INDEX.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + '\n', encoding='utf-8', newline='\n')
+    log(f'wrote {SKIN_INDEX.relative_to(ROOT).as_posix()} ({len(by_stem)} stems)')
+
+
+def load_skin_index():
+    """{stem: skinId} from the committed index, or None when it has not been generated yet."""
+    try:
+        return json.loads(SKIN_INDEX.read_text(encoding='utf-8')).get('byStem') or None
+    except (OSError, ValueError):
+        return None
+
+
+def used_char_ids():
+    """Every operator the project actually fields: the roster of `data/chess.json` plus the 自选编队 pool of
+    `data/backups.json` (`diy.ownedPool` and `diy.prototypes`).
+
+    The roster alone is not enough. The 自选编队 pool draws on operators outside it (煌, 陈, 凯尔希 …), and a catalogue
+    built for the roster cannot see their skins — which is exactly why those operators offered only 默认 while the
+    client had their art. tools/skin-library/used-operators.mjs computes the same set for the Node side."""
+    ids = set()
+    try:
+        chess = json.loads((ROOT / 'data/chess.json').read_text(encoding='utf-8'))
+        for v in chess.values():
+            if isinstance(v, dict) and v.get('charId'):
+                ids.add(v['charId'])
+    except (OSError, ValueError) as e:
+        print(f'warn: chess.json unreadable ({e})', file=sys.stderr)
+    try:
+        diy = (json.loads((ROOT / 'data/backups.json').read_text(encoding='utf-8')).get('diy') or {})
+        ids.update(diy.get('ownedPool') or [])
+        for group in (diy.get('prototypes') or {}).values():
+            ids.update(group or [])
+    except (OSError, ValueError) as e:
+        print(f'warn: backups.json unreadable ({e})', file=sys.stderr)
+    return ids
+
+
+def client_skin_plan(used):
+    """{charId: [{skinId, stem, client}]} for every skin the CLIENT holds for an operator in `used`.
+
+    Read from the library index (tools/skin-library/library-index.json) rather than a catalogue: the client enumerates
+    its own art, so a skin no research table lists is extracted all the same. The index carries `charId` and `skinId`
+    on every entry, so no stem has to be parsed back into an id here.
+
+    `stem` is the URL-safe form (`#` → `_`) the manifest groups use; `client` is the name the bundle itself uses."""
+    try:
+        tiers = json.loads(LIBRARY_INDEX.read_text(encoding='utf-8')).get('tiers') or {}
+    except (OSError, ValueError):
+        return {}
+    plan = {}
+    for entry in (tiers.get('illust') or {}).values():
+        skin_id, char_id = entry.get('skinId'), entry.get('charId')
+        if not skin_id or not char_id or char_id not in used:
+            continue
+        plan.setdefault(char_id, []).append(
+            {'skinId': skin_id, 'stem': skin_id.replace('@', '_').replace('#', '_'),
+             'client': client_stem(skin_id)})
+    for entries in plan.values():
+        entries.sort(key=lambda e: e['skinId'])
+    return plan
+
+
+def skin_plan():
+    """{charId: [{skinId, stem, client}]} for every skin to extract, from the client's own enumeration.
+
+    Supersedes the research table as the source: docs/research/08-skins.json lists 174 skins on 115 of the operators
+    the project fields, while the client holds 275 — the difference is the 自选编队 operators' skins, which had no model
+    at all, so choosing one fell back to the operator's default chibi. The table is still consulted for one thing: the
+    URL-safe `stem` it coined (`char_1012_skadi2@boc#4` → `char_1012_skadi2_boc_4`), because the committed
+    tools/skin-library/skin-index.json and the directories extracted before this change use that form. A stem the table
+    does not know gets the same rule applied directly."""
+    used = used_char_ids()
+    plan = client_skin_plan(used)
+    if not plan:
+        # no library yet (an older install): fall back to the research table, as before
+        try:
+            research = json.loads((ROOT / 'docs/research/08-skins.json').read_text(encoding='utf-8')).get('skins') or {}
+        except (OSError, ValueError):
+            return {}
+        for char_id, entries in research.items():
+            if char_id not in used:
+                continue
+            keep = [{'skinId': s['skinId'], 'stem': s['stem'], 'client': client_stem(s['skinId'])}
+                    for s in entries if s.get('skinId') and s.get('stem')]
+            if keep:
+                plan[char_id] = keep
+        return plan
+    try:
+        research = json.loads((ROOT / 'docs/research/08-skins.json').read_text(encoding='utf-8')).get('skins') or {}
+        known = {s['skinId']: s['stem'] for entries in research.values() for s in entries if s.get('skinId')}
+    except (OSError, ValueError):
+        known = {}
+    for entries in plan.values():
+        for e in entries:
+            if e['skinId'] in known:
+                e['stem'] = known[e['skinId']]
+    return plan
+
+
+def fetch_missing_avatars(plan, log):
+    """Last-resort network fallback for a skin avatar the CLIENT did not supply: download it from the URL
+    docs/research/08-skins.json carries (the source tools/install-skins.mjs uses).
+
+    Kept only for a client older than the avatar bundles, or one missing them. The normal path is
+    extract_skin_avatars(): the 180×180 icons live in the client's spritepack/ui_char_avatar_<N>.ab, so nothing has to
+    be fetched — this function's result is normally empty."""
+    import urllib.request
+    research = {}
+    try:
+        research = json.loads((ROOT / 'docs/research/08-skins.json').read_text(encoding='utf-8')).get('skins') or {}
+    except (OSError, ValueError):
+        return {}
+    by_id = {}
+    for entries in research.values():
+        for s in entries:
+            if s.get('skinId'):
+                by_id[s['skinId']] = s
+    out, avatars = {}, Path(ROOT) / 'public/assets' / AVATAR_DIR
+    for _char_id, entries in sorted(plan.items()):
+        for entry in entries:
+            skin_id, stem = entry['skinId'], entry['stem']
+            dest = avatars / f'{stem}.png'
+            if dest.exists() and dest.stat().st_size:
+                continue
+            url = ((by_id.get(skin_id) or {}).get('avatar') or {}).get('url')
+            if not url:
+                continue
+            try:
+                avatars.mkdir(parents=True, exist_ok=True)
+                with urllib.request.urlopen(url, timeout=30) as res:  # noqa: S310 (the research table's own URL)
+                    blob = res.read()
+                if not blob:
+                    continue
+                dest.write_bytes(blob)
+                out[skin_id] = f'/assets/{AVATAR_DIR}/{stem}.png'
+                log(f'  avatar {skin_id} -> {dest.name} ({len(blob)} B, from the mirror: not in this client)')
+            except Exception as e:
+                log(f'  warn {skin_id}: avatar fetch failed ({e}); the picker falls back to the operator avatar')
+    return out
+
+
+def extract_skin_avatars(ab_root, plan, log):
+    """The 180×180 head icon of every planned skin, from the client's spritepack/ui_char_avatar_<N>.ab, written to
+    public/assets/char/avatar/skin/<stem>.png (where tools/install-skins.mjs puts the mirror's copy, so the client's
+    existing lookups work unchanged). Returns {skinId: URL}.
+
+    Pure local: no download. Each avatar is both a Sprite and a Texture2D named <stem> — `char_1012_skadi2@boc#4`
+    becomes `char_1012_skadi2_boc#4` (@→_, # kept). Bundles are opened one at a time and skipped once every stem they
+    can supply is already written, so the six bundles this mode needs are the six that get read."""
+    import aklz4  # noqa: F401
+    import UnityPy
+    wanted = {}
+    for char_id, entries in plan.items():
+        for e in entries:
+            wanted.setdefault(e['client'], (e['skinId'], e['stem']))
+    if not wanted:
+        return {}
+    dest_dir = Path(ROOT) / 'public/assets' / AVATAR_DIR
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    out = {}
+    for f in sorted(Path(ab_root).glob(AVATAR_PACKS)):
+        if not wanted:
+            break
+        try:
+            env = UnityPy.load(str(f))
+        except Exception as e:
+            log(f'FAIL load {f.name}: {e}')
+            continue
+        hit = 0
+        for o in env.objects:
+            if o.type.name not in ('Texture2D', 'Sprite'):
+                continue
+            try:
+                d = o.read()
+            except Exception:
+                continue
+            name = str(getattr(d, 'm_Name', '') or '')
+            item = wanted.get(name)
+            if not item:
+                continue
+            skin_id, stem = item
+            try:
+                img = d.image
+            except Exception as e:
+                log(f'  warn {skin_id}: avatar unreadable ({e})')
+                continue
+            img.save(dest_dir / f'{stem}.png')
+            out[skin_id] = f'/assets/{AVATAR_DIR}/{stem}.png'
+            wanted.pop(name, None)
+            hit += 1
+        if hit:
+            log(f'{f.relative_to(ab_root).as_posix()}: {hit} skin avatar(s)')
+    for name, (skin_id, _stem) in sorted(wanted.items()):
+        log(f'  warn {skin_id}: no avatar for {name} in this client')
+    return out
+
+
+def write_skin_illustrations(ab_root, out_root, plan, manifest, log, stems=None):
+    """The STATIC illustration of every planned skin as spine/op/<charId>/<stem>/illust.png, listed in the same
+    manifest group as the skin's Front model. Two shapes exist in the client:
+
+      * `<stem>b` — 1024×1024, what most skins carry (172 of the mode's 174);
+      * bare `<stem>` — 1320–1416×1416, the full-page illustration, for the few skins that have no `b` variant
+        (char_4051_akkord@summer#23, char_4163_rosesa@game#7 here).
+
+    `b` is preferred where both exist. The DYNAMIC illustration page (`<stem>` at 2200–2508 px on a skin that also has
+    `b`) stays out: it needs a canvas player the remake has no use for and is 4–7 MB per skin against ~1 MB for this
+    one. This is what the 皮肤 picker shows — the tile art and the enlarged preview — and the local client is its only
+    source, no mirror carries it."""
+    import aklz4  # noqa: F401
+    import UnityPy
+    n = 0
+    for char_id in sorted(plan):
+        # keyed by BOTH stem forms: the catalogue's `char_1012_skadi2_boc_4` and the client's `char_1012_skadi2_boc#4`
+        # (the two differ only in `#` vs `_`, and the texture name uses the client's)
+        wanted = {}
+        for e in plan[char_id]:
+            if stems is None or e['stem'] in stems or e['client'] in stems:
+                wanted[e['stem']] = e
+                wanted[e['client']] = e
+        if not wanted:
+            continue
+        bundle = Path(ab_root) / SKIN_PACK.format(char_id)
+        if not bundle.exists():
+            continue
+        try:
+            env = UnityPy.load(str(bundle))
+        except Exception as e:
+            log(f'FAIL load {bundle.name}: {e}')
+            continue
+        # pass 1 collects the candidates, pass 2 picks one per skin: `b` beats the bare name, and among equal names the
+        # LARGEST wins (a skin without `b` carries several textures under the bare name — an illustration page plus
+        # 316–340 px thumbnails — and the page is the one worth showing)
+        best = {}
+        for o in env.objects:
+            if o.type.name != 'Texture2D':
+                continue
+            try:
+                d = o.read()
+            except Exception:
+                continue
+            name = str(getattr(d, 'm_Name', '') or '')
+            if name.endswith('b'):
+                key, rank = name[:-1], 0
+            else:
+                key, rank = name, 1
+            entry = wanted.get(key)
+            if not entry:
+                continue
+            area = (getattr(d, 'm_Width', 0) or 0) * (getattr(d, 'm_Height', 0) or 0)
+            cur = best.get(key)
+            if cur is None or (rank, -area) < (cur[0], -cur[3]):
+                best[key] = (rank, entry, d, area)
+        for _key, (_rank, entry, d, _area) in sorted(best.items()):
+            try:
+                img = d.image
+            except Exception as e:
+                log(f'  warn {entry["skinId"]}: illustration unreadable ({e})')
+                continue
+            # the catalogue stem, the same one export_skin_spines uses for the directory and the manifest group
+            # (the client's name differs only in `#` vs `_`)
+            stem = entry['stem']
+            sub = f'{SKIN_SPINE_SUB}/{char_id}/{stem}'
+            out_dir = Path(out_root) / sub
+            out_dir.mkdir(parents=True, exist_ok=True)
+            img.save(out_dir / 'illust.png')
+            # The illustration gets its OWN group, never `<sub>/front`: that group belongs to the Spine model, and
+            # everything in it is read as the model's atlas pages (`assets.js spinePages` → `localSpineEntry`, which
+            # requires every one of them to be a real file). Registering illust.png there made the skin's page list
+            # name a file that does not sit in the model's directory — the entry then failed its own check and the
+            # renderer fell back to the operator's default chibi (the diamond the owner reported).
+            manifest.setdefault(sub, {})['illust.png'] = {
+                'path': asset_url(*sub.split('/'), 'illust.png'), 'w': img.width, 'h': img.height,
+                'kind': 'Texture2D'}
+            n += 1
+            log(f'{bundle.relative_to(ab_root).as_posix()}: {entry["skinId"]} illustration -> {sub} ({img.width}x{img.height})')
+    return n
+
+
+def read_hub_keys(hub_path, log):
+    """The asset ids a packing manifest declares (`_keys` of the AutoPackConfig MonoBehaviour), or an empty set.
+
+    The keys list every packed id twice — once as the sprite name and once as its source path
+    (`Arts/CharAvatars/Skins/<id>`) — so the caller gets both forms and can match either. They are stored
+    LOWERCASED: the catalogue and the Texture2D names use the camelCase skin token (`…_ambienceSynesthesia#6`) while
+    `_keys` holds `…_ambiencesynesthesia#6`, so a verbatim comparison silently drops every id with a capital."""
+    import aklz4  # noqa: F401
+    import UnityPy
+    keys = set()
+    try:
+        env = UnityPy.load(str(hub_path))
+    except Exception as e:
+        log(f'  warn {hub_path.name} unreadable ({e})')
+        return keys
+    for o in env.objects:
+        if o.type.name != 'MonoBehaviour':
+            continue
+        try:
+            tt = o.read_typetree()
+        except Exception:
+            continue
+        for k in tt.get('_keys') or []:
+            s = str(k)
+            keys.add(s)
+            keys.add(s.lower())
+            keys.add(s.rsplit('/', 1)[-1])
+            keys.add(s.rsplit('/', 1)[-1].lower())
+    return keys
+
+
+def operator_of_client_id(name):
+    """The operator a client asset id belongs to: `char_017_huang_witch#5` → `char_017_huang`, and `char_017_huang_2`
+    → `char_017_huang`. None for a summon (`token_<n>_<name>_…`) or anything else that is not an operator id."""
+    m = re.match(r'^(char_\d+_[a-z0-9]+)', str(name))
+    return m.group(1) if m else None
+
+
+def skin_id_of_stem(stem, char_id):
+    """`char_017_huang_witch#5` → `char_017_huang@witch#5`: the catalogue id a client model stem corresponds to.
+
+    The client names a skin `<charId>_<token>` (its `@` → `_`, `#` kept), so the first `_` after the charId is the one
+    the `@` replaced. Returns None for a stem that is not a skin of `char_id` — a summon's skin is named
+    `token_<n>_<name>_<series>#<n>` and belongs to no operator, and the default appearance is `<charId>` alone."""
+    if not stem.startswith(f'{char_id}_'):
+        return None
+    token = stem[len(char_id) + 1:]
+    return f'{char_id}@{token}' if token else None
+
+
+def asset_url(*parts):
+    """A `/assets/...` URL for path parts that may contain the client's `#` — percent-encoded as `%23`.
+
+    The client names a skin `char_017_huang_witch#5`, and in a URL a bare `#` starts the fragment, so the browser
+    requests everything before it and the image 404s. Every URL the manifest carries goes through here.
+
+    The escape has to live here rather than be left to the client, because the consumers differ: the board art
+    (render/boardArt.js) and the avatar / portrait / skin URLs of assets.js put this string in front of the browser
+    unchanged, so a `#` that survives into the manifest is truncated. render/board3d/load.js is the one consumer that
+    escapes, and it must not escape an already-escaped path (see `manifestUrl` there) — `encodeURI('%23')` is
+    `'%2523'`, which 404s.
+
+    Only the SEGMENTS are quoted (`safe=''`), the separators stay literal: quoting the whole path would turn `/` into
+    `%2F`, which a static file server treats as one very long file name."""
+    return '/'.join(['/assets/local'] + [quote(str(p), safe='') for p in parts])
+
+
+def export_library(ab_root, out_root, manifest, log, which=None, stems=None):
+    """Every operator image of the client, in three tiers, written under public/assets/local/library/<tier>/ and
+    listed in data/local-assets.json groups `library/<tier>/<id>`.
+
+    Pure local and catalogue-independent: it walks the client's own packing manifests and skin bundles, so a skin the
+    research table never listed is extracted all the same. Returns {tier: {id: URL}}.
+
+    `which` limits the tiers (e.g. {'portrait'}); `stems` limits the illustration tier to those client stems."""
+    import aklz4  # noqa: F401
+    import UnityPy
+    out_root = Path(out_root)
+    result = {}
+    for tier, sub, hub_rel, glob, _idkeys, size in LIBRARIES:
+        if which and tier not in which:
+            continue
+        got = {}
+        if tier == 'illust':
+            # one bundle per operator, named by the skin stems inside it
+            for bundle in sorted(Path(ab_root).glob('skinpack/*.ab')):
+                char_id = bundle.stem
+                try:
+                    env = UnityPy.load(str(bundle))
+                except Exception as e:
+                    log(f'FAIL load {bundle.name}: {e}')
+                    continue
+                # `<stem>b` (static) beats the bare `<stem>` (the dynamic page, 4–7 MB, needs a canvas player)
+                best = {}
+                for o in env.objects:
+                    if o.type.name != 'Texture2D':
+                        continue
+                    try:
+                        d = o.read()
+                    except Exception:
+                        continue
+                    name = str(getattr(d, 'm_Name', '') or '')
+                    if not name or name.startswith('build_') or name.endswith('[alpha]'):
+                        continue
+                    stem = name[:-1] if name.endswith('b') else name
+                    # a skin's texture is named `<charId>_<series>#<n>`; the operator's own name alone is the
+                    # default appearance, which char_portrait already carries at a fixed size
+                    if not stem.startswith(f'{char_id}_'):
+                        continue
+                    if stems is not None and stem not in stems and name not in stems:
+                        continue
+                    area = (getattr(d, 'm_Width', 0) or 0) * (getattr(d, 'm_Height', 0) or 0)
+                    rank = (0 if name.endswith('b') else 1, -area)
+                    cur = best.get(stem)
+                    if cur is None or rank < cur[0]:
+                        best[stem] = (rank, d, name)
+                for stem, (_rank, d, _name) in sorted(best.items()):
+                    try:
+                        img = d.image
+                    except Exception as e:
+                        log(f'  warn {stem}: illustration unreadable ({e})')
+                        continue
+                    rel = f'{LIBRARY_ROOT}/{sub}/{stem}'
+                    (out_root / rel).mkdir(parents=True, exist_ok=True)
+                    img.save(out_root / rel / 'illust.png')
+                    entry = {'path': asset_url(LIBRARY_ROOT, sub, stem, 'illust.png'), 'w': img.width, 'h': img.height,
+                             'kind': 'Texture2D', 'charId': char_id,
+                             'skinId': skin_id_of_stem(stem, char_id)}
+                    manifest.setdefault(rel, {})['illust.png'] = {k: v for k, v in entry.items() if k != 'skinId'}
+                    got[stem] = entry
+                if best:
+                    log(f'{bundle.relative_to(ab_root).as_posix()}: {len(best)} illustration(s)')
+        else:
+            hub = Path(ab_root) / hub_rel
+            keys = read_hub_keys(hub, log) if hub.exists() else set()
+            if hub.exists():
+                log(f'{hub_rel}: {len(keys)} key form(s)')
+            for bundle in sorted(Path(ab_root).glob(glob)):
+                try:
+                    env = UnityPy.load(str(bundle))
+                except Exception as e:
+                    log(f'FAIL load {bundle.name}: {e}')
+                    continue
+                hit = 0
+                for o in env.objects:
+                    if o.type.name != 'Texture2D':
+                        continue
+                    try:
+                        d = o.read()
+                    except Exception:
+                        continue
+                    name = str(getattr(d, 'm_Name', '') or '')
+                    if not name or (keys and name not in keys and name.lower() not in keys):
+                        continue
+                    try:
+                        img = d.image
+                    except Exception as e:
+                        log(f'  warn {name}: unreadable ({e})')
+                        continue
+                    rel = f'{LIBRARY_ROOT}/{sub}/{name}'
+                    (out_root / rel).mkdir(parents=True, exist_ok=True)
+                    img.save(out_root / rel / 'image.png')
+                    owner = operator_of_client_id(name)
+                    # `<charId>_1` and `_2` are the operator's own default appearance, not a skin
+                    skin = None if name in (f'{owner}_1', f'{owner}_2') else skin_id_of_stem(name, owner)
+                    entry = {'path': asset_url(LIBRARY_ROOT, sub, name, 'image.png'), 'w': img.width, 'h': img.height,
+                             'kind': 'Texture2D', 'id': name, 'charId': owner, 'skinId': skin}
+                    manifest.setdefault(rel, {})['image.png'] = {k: v for k, v in entry.items() if k != 'skinId'}
+                    got[name] = entry
+                    hit += 1
+                if hit:
+                    log(f'{bundle.relative_to(ab_root).as_posix()}: {hit} {tier}(s)')
+        result[tier] = got
+        log(f'{tier}: {len(got)} image(s) ({size})')
+    return result
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--game', help='AssetBundle root (…/StreamingAssets/AB/Windows or …/Documents/Bundles)')
@@ -848,6 +1788,11 @@ def main():
     ap.add_argument('--webp', action='store_true',
                     help='only write the WebP copies of the board textures from the PNGs already under --out and list '
                          'them in the manifest (needs Pillow, not the client)')
+    ap.add_argument('--skin', action='append', default=[], metavar='STEM',
+                    help='only the operator skins with this model stem (repeatable), e.g. char_1012_skadi2_boc_4; '
+                         'the whole installed set otherwise')
+    ap.add_argument('--library-tier', action='append', default=[], metavar='TIER',
+                    help='with --only library, extract only these tiers (repeatable; avatar / portrait / illust)')
     args = ap.parse_args()
 
     if args.print_jobs:
@@ -875,7 +1820,21 @@ def main():
     enemy_ids = spine_ids(args.only, ENEMY_SPINE_SUB, ENEMY_SPINES)
     token_ids = spine_ids(args.only, TOKEN_SPINE_SUB, TOKEN_SPINES)
     stage_ids = scene_ids(args.only)
-    if not jobs and not enemy_ids and not token_ids and not stage_ids:
+    skin_stems = skin_ids(args.only, args.skin)
+    library_tiers = set()
+    # The library is part of a FULL extraction, not an opt-in: `setup --local` runs this script with no --only, and the
+    # catalogue the client reads (data/skins.json) names library images, so skipping it would leave a clone that ran
+    # the official setup with a catalogue whose every image 404s. `--only library` extracts just this, and
+    # `--library-tier` narrows it further.
+    if not args.only or 'library' in args.only:
+        known = {t for t, _s, _h, _g, _k, _z in LIBRARIES}
+        unknown = set(args.library_tier) - known
+        if unknown:
+            print(f'--library-tier: unknown tier(s) {sorted(unknown)}; known: {sorted(known)}', file=sys.stderr)
+            return 2
+        library_tiers = set(args.library_tier) or known
+
+    if not jobs and not enemy_ids and not token_ids and not stage_ids and skin_stems is None and not library_tiers:
         print(f'--only {args.only}: no job matches', file=sys.stderr)
         return 2
     out_root = Path(args.out)
@@ -890,6 +1849,32 @@ def main():
         total += export_token_spines(ab_root, out_root, manifest, print, token_ids)
     if stage_ids:
         total += export_scenes(ab_root, out_root, manifest, print, stage_ids, scene_roots(ab_root, args.scenes))
+    # The library FIRST when both run: export_skin_spines reads its portrait tier for the manifest's button art
+    # (skin_portraits_from_library), so the reverse order would write data/skins-local.json without any portrait URL
+    # and only fix it on a second run.
+    lib = {}
+    if library_tiers:
+        lib = export_library(ab_root, out_root, manifest, print, library_tiers)
+    if skin_stems is not None:
+        total += export_skin_spines(ab_root, out_root, manifest, print, set(skin_stems) or None)
+    # The index (and the count) belong to the library tiers, and only a run that extracted them may write it: a
+    # `--only spine/op` run used to reach this block and die on the unbound `lib` — after the skins were written, so
+    # data/local-assets.json (the merged manifest below) was never updated and the new page names never reached the
+    # client. Nothing is written without the library, and the files keep the index of the last run that had it.
+    if lib:
+        total += sum(len(v) for v in lib.values())
+        index = {'version': 1, 'source': 'local-client',
+                 'note': 'Operator images extracted from the local client by tools/local-extract/extract.py '
+                         '(`--only library`): every operator, not only the skins the research catalogue lists. Written '
+                         'to public/assets/local/library/<tier>/<id>/ and listed in data/local-assets.json.',
+                 'counts': {t: len(v) for t, v in lib.items()},
+                 'tiers': {t: dict(sorted(v.items())) for t, v in lib.items()}}
+        text = json.dumps(index, ensure_ascii=False, indent=1) + '\n'
+        LIBRARY_INDEX.parent.mkdir(parents=True, exist_ok=True)
+        LIBRARY_INDEX.write_text(text, encoding='utf-8', newline='\n')
+        LIBRARY_DATA_FILE.write_text(text, encoding='utf-8', newline='\n')
+        print(f'wrote {LIBRARY_INDEX.relative_to(ROOT).as_posix()} and {LIBRARY_DATA_FILE.relative_to(ROOT).as_posix()} '
+              f'({", ".join(f"{t} {len(v)}" for t, v in lib.items())})')
     old = {}
     if args.only and Path(args.manifest).exists():
         try:

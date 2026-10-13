@@ -8,10 +8,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { artPlan, formatSummary, isPlayerFile, isRefused } from '../tools/package.mjs';
 import { localGaps, sceneInstallPlan } from '../tools/setup.mjs';
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+// fileURLToPath, not `new URL(...).pathname`: the latter keeps the leading slash of a Windows drive path
+// ("/D:/…"), which path.resolve then turns into "D:\D:\…" (GitHub PR #547 fixes the same pattern).
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 test('sceneInstallPlan: fetch only with a client and extractor deps; otherwise the metal board', () => {
   const present = sceneInstallPlan({ hasScenes: true, client: false });

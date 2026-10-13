@@ -123,6 +123,12 @@ export class PlayerRound {
         // 干员调配 settings, 潜能 6 / 精英2 Lv.60 by default and for bots; never a stand-in's nor a prototype pick's)
         const cv = u.standIn ? null : this.cultivationFor(this.gd.chess(piece.id));
         if (cv) { u.potential = cv.potential; u.cultivate = cv.cultivate; }
+        // 皮肤 (docs/SKINS.md): this player's choice for this chess, carried the same way the loadout is so it reaches
+        // Unit.skin and the snapshot. Keyed by BASE id first (the same reason as pieceView) so a skin chosen before the
+        // merge survives it instead of silently reverting to the default model.
+        const skinRec = this.gd.chess(piece.id);
+        const skin = this.skins[skinRec?.baseId || piece.id] || this.skins[piece.id];
+        if (skin) u.skin = skin;
         if (carry && carry.has(piece.uid)) u.carryState = carry.get(piece.uid);
         units.push(u);
       } else if (piece.kind === 'token') {

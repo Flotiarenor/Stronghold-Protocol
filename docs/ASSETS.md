@@ -215,7 +215,7 @@ The `stem` of a Spine model is the upstream file name. Two examples: `char_107_l
 
 ## Manifest schema (`data/assets.json`)
 
-All paths are URL paths relative to the site root, for example `/assets/char/avatar/char_002_amiya.png`. **Only entries whose files exist on disk are emitted.** When a key is missing, the client should use its fallback (research 07 §5.6).
+All paths are URL paths relative to the site root, for example `/assets/char/avatar/char_002_amiya.png`. A character a URL cannot carry literally is already percent-encoded here — the client's own asset names contain `#` (`char_002_amiya_epoque#4`, `[opt]merged_textures`), which would otherwise be cut off as a fragment or a query — so a consumer that puts the string in front of the browser must not escape it a second time (`encodeURI('%5B')` is `'%255B'`, which 404s; `render/board3d/load.js manifestUrl` is the one consumer that escapes, and it leaves an existing escape alone). **Only entries whose files exist on disk are emitted.** When a key is missing, the client should use its fallback (research 07 §5.6).
 
 ```js
 {
@@ -224,7 +224,11 @@ All paths are URL paths relative to the site root, for example `/assets/char/ava
   generator: 'tools/fetch-assets.mjs',
   stats: { files, bytes, chars, charsWithBack, enemies, enemiesWithSpine, tokens, tokensWithSpine,
            spineModels, bonds, items, bands, skills, modules, ui, sfxUnits, voiceChars, voiceJpChars },
-  chars:   { [charId]: { avatar, avatarE2?, portrait, portraitE2?, spine: { front: Spine, back?: Spine } } },
+  chars:   { [charId]: { avatar, avatarE2?, portrait, portraitE2?, spine: { front: Spine, back?: Spine },
+                         // 干员皮肤 (docs/SKINS.md): one entry per INSTALLED skin, keyed by the official skinId.
+                         // Installed on demand by tools/install-skins.mjs, never wholesale — an absent `skins` means
+                         // none, which is the default.
+                         skins?: { [skinId]: { avatar?, name, group, spine: { front: Spine, back?: Spine } } } } },
   enemies: { [enemyId]: { icon, spine?: Spine, spineAliasOf?: enemyId,
                           spineLocal?: { group, skel, atlas, textures, …Spine } } },
                           // spineLocal: an optional local-client model; file names in a data/local-assets.json group,

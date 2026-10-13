@@ -103,6 +103,26 @@ async function fetchJson(url) {
 }
 
 /**
+ * A `data/local-assets.json` path as a browser URL.
+ *
+ * The manifest's paths come out of tools/local-extract/extract.py, which percent-encodes what a URL cannot carry
+ * literally — the `#` of a client asset name (`char_017_huang_witch#5`) becomes `%23`. Escaping such a path again is
+ * destructive: `encodeURI('%5Bopt%5D…')` is `'%255Bopt%255D…'`, so the request 404s (the board's gate / objective
+ * texture, which is why the red and blue doors were missing). The other consumers (render/boardArt.js and the
+ * avatar / portrait / skin URLs of assets.js) hand the manifest string to the browser unchanged, which is why the
+ * escape cannot simply move to this side.
+ *
+ * So this escapes the characters `encodeURI` escapes, but only where they are not already an escape sequence —
+ * an escaped path comes out unchanged, a raw one comes out escaped, and neither is escaped twice.
+ * @param {string} path the manifest `path`
+ * @returns {string|null}
+ */
+export function manifestUrl(path) {
+  if (typeof path !== 'string' || !path) return null;
+  try { return encodeURI(path).replace(/%25([0-9A-Fa-f]{2})/g, '%$1'); } catch { return path; }
+}
+
+/**
  * Load the board pack through the asset store of public/js/assets.js (needs local(), localUrl(), image()).
  * @returns {Promise<object|null>}
  */
@@ -112,7 +132,7 @@ export function loadBoardPack(assets) {
     if (!assets || typeof assets.local !== 'function' || typeof assets.localUrl !== 'function' || typeof assets.image !== 'function') return null;
     const manifest = await assets.local().catch(() => null);
     if (!isObj(manifest)) return null;
-    const url = (g, n) => { const u = assets.localUrl(g, n); return typeof u === 'string' && u ? encodeURI(u) : null; };
+    const url = (g, n) => manifestUrl(assets.localUrl(g, n));
     const dUrl = url(...PACK_IMAGES.D);
     if (!dUrl) return null;
     const images = {};
@@ -297,7 +317,7 @@ export function loadScenePack(assets, stageId) {
   if (sceneCache.has(stageId)) return sceneCache.get(stageId);
   const pending = (async () => {
     if (!(await sceneListed(assets, stageId)) || typeof assets.image !== 'function') return null;
-    const url = (g, n) => { const u = assets.localUrl(g, n); return typeof u === 'string' && u ? encodeURI(u) : null; };
+    const url = (g, n) => manifestUrl(assets.localUrl(g, n));
     const group = sceneGroup(stageId);
     const [doc, buf] = await Promise.all([fetchJson(url(group, 'scene')), fetchBuffer(url(group, 'bin'))]);
     if (!isObj(doc) || doc.version !== SCENE_VERSION || !buf) return null;

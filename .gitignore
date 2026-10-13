@@ -15,6 +15,13 @@ public/fonts/
 # public/assets/ above). Downloaded bundles live in .cache/official-scenes/ (already ignored by .cache/ below).
 # The repository never stores those official files.
 data/local-assets.json
+# the operator skin models of the same extraction (docs/SKINS.md): the manifest the client reads at /data/, whose
+# groups name files under public/assets/local/spine/op/** — machine-local exactly like the art it points at
+data/skins-local.json
+# the operator image library of the same extraction (tools/skin-library/): the index the client reads at /data/,
+# whose entries name files under public/assets/local/library/** — machine-local exactly like the art it points at.
+# The committed copy is tools/skin-library/library-index.json (no image paths that a checkout would lack).
+data/library-index.json
 # download caches, upstream tables, ledgers, reports, setup state
 .cache/
 

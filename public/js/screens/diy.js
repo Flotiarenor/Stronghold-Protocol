@@ -17,6 +17,7 @@ import { data } from '../data.js';
 import { PROF_NAME, skillLabel, moduleBadge, fullTraitText, skillTags } from '../ui/loadoutModel.js';
 import { diySlotList, pickChoices, pickOptions, slotRecord, defaultPick } from '../ui/diyModel.js';
 import { OperatorVoice } from '../ui/operatorVoice.js';
+import { SkinSection } from '../ui/skinPicker.js';
 import { LoadoutStats } from '../ui/loadoutStats.js';
 import { CultivationSelects } from './cultivation.js';
 import { t } from '../../../shared/i18n.js';
@@ -69,6 +70,8 @@ function SlotCard({ m, slot, pick, illegal, onOpen, onClear, ops = {}, onOps = n
       <b class="diy-slot__name">${rec.name}</b>
       <small class="diy-slot__class">${classLine(rec)}</small>
       <${Bonds} bonds=${rec.bonds} />
+      ${/* No skin picker on the slot card: the appearance is chosen inside the operator picker (below), once an
+           operator is selected — the card stays a summary of the pick (docs/SKINS.md). */ null}
       <span class="diy-slot__kit" data-skill=${sk?.index ?? ''}>
         <${Img} src=${skillRecordIconUrl(m, sk, { empty: false })} class="diy-slot__sicon" fallback=${html`<b class="num">${skillLabel(sk?.index)}</b>`} />
         <span><b class="num">${skillLabel(sk?.index)}</b> ${sk?.name || ''}${proto ? html` <small class="t-dim">${t('（锁定）')}</small>` : null}</span>
@@ -77,9 +80,9 @@ function SlotCard({ m, slot, pick, illegal, onOpen, onClear, ops = {}, onOps = n
         ${mod ? html`<${Img} src=${moduleTypeIconUrl(data.get('local'), mod.type)} class="diy-slot__micon" fallback=${html`<b class="num">${moduleBadge({ typeName: mod.type })}</b>`} />` : html`<span class="diy-slot__micon diy-slot__micon--none">—</span>`}
         <span>${mod ? html`<b class="num">${mod.type || ''}</b> ${mod.name || ''}` : t('不装备模组')} <small class="t-dim">${t('（精锐时生效）')}</small></span>
       </span>
+      <${OperatorVoice} charId=${rec.charId} />
       ${proto ? html`<small class="diy-slot__cult t-dim">${t('原型干员没有潜能与练度')}</small>`
         : onOps ? html`<span class="diy-slot__cult"><${CultivationSelects} charId=${rec.charId} ops=${ops} onSet=${onOps} /></span>` : null}
-      <${OperatorVoice} charId=${rec.charId} />
       ${illegal ? html`<p class="diy-slot__bad"><${Icon} name="warn" />${t('这项自选在当前版本不可用，开局时会被移除')}</p>` : null}
     </div>
     <div class="diy-slot__acts">
@@ -221,7 +224,11 @@ export function DiyPickerView({ m, slot, picks, kitted, onDone, onClose, filter,
             <span class="diy-pick__wtxt"><b>${unit.name}</b><small>${classLine(unit)}</small></span>
             <${KindTag} proto=${ch.proto} />
           </div>
-          ${!ch.proto && onOps ? html`<section class="lo-sec"><header class="lo-sec__head"><h3>${t('潜能与练度')}</h3></header><${CultivationSelects} charId=${draft.charId} ops=${ops} onSet=${onOps} /></section>` : null}
+          ${/* 外观 sits directly under the operator's name and above 局内数值 / 技能 / 模组 / 潜能与练度, as in the
+               干员调配 detail: it is the choice a player changes, a skill or module usually keeps its default, and
+               潜能 / 练度 is a one-off (docs/SKINS.md). It renders here and NOT on the slot card, so the appearance
+               is chosen while picking the operator. */ null}
+          ${ch.proto || !base ? null : html`<${SkinSection} chess=${{ ...base, charId: draft.charId, chessId: slot.slotId }} />`}
           <${LoadoutStats} base=${base} golden=${golden} entries=${previewEntries} level=${previewLevel}
             onLevel=${onPreviewLevel} getChess=${previewChess} ops=${ch.proto ? null : ops} />
           <h4 class="diy-pick__sec">${t('技能')}${ch.proto ? html`<small>${t('原型干员的技能与补位时一致，不可更改')}</small>` : null}</h4>
@@ -236,7 +243,8 @@ export function DiyPickerView({ m, slot, picks, kitted, onDone, onClose, filter,
               : [html`<${ModuleRow} key="none" id=${null} rec=${null} on=${modOn == null} locked=${false} onPick=${() => setDraft({ ...draft, uniEquipId: null })} />`,
                 ...ch.modules.map((x) => html`<${ModuleRow} key=${x.uniEquipId} id=${x.uniEquipId} rec=${x.rec} on=${modOn === x.uniEquipId} locked=${false}
                   onPick=${(id) => setDraft({ ...draft, uniEquipId: id })} />`)]}
-          </div>` : html`<p class="lo-empty t-dim">${t('从左侧选择一名干员')}</p>`}
+          </div>
+          ${!ch.proto && onOps ? html`<section class="lo-sec"><header class="lo-sec__head"><h3>${t('潜能与练度')}</h3></header><${CultivationSelects} charId=${draft.charId} ops=${ops} onSet=${onOps} /></section>` : null}` : html`<p class="lo-empty t-dim">${t('从左侧选择一名干员')}</p>`}
       </div>
     </div>
     <footer class="diy-pick__foot">

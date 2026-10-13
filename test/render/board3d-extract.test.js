@@ -12,7 +12,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { decodePng } from '../../tools/crop-board-atlas.mjs';
-import { PACK_IMAGES, PACK_MESHES, GATE_NODES } from '../../public/js/render/board3d/load.js';
+import { PACK_IMAGES, PACK_MESHES, GATE_NODES, manifestUrl } from '../../public/js/render/board3d/load.js';
 import { VENDOR_FILES } from '../../tools/vendor.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -215,5 +215,29 @@ describe('extracted board files (when a local client was extracted)', { skip: !m
         assert.ok(e.webp === 'lossy' || e.webp === 'lossless', `${g}/${n}: mode ${e.webp}`);
       }
     }
+  });
+
+  test('every manifest path survives the escape render/board3d/load.js applies (no path double-encodes)', { skip: !hasFiles && 'files not extracted' }, () => {
+    // `load.js` builds every URL as `manifestUrl(assets.localUrl(…))`, and the manifest comes out of extract.py
+    // already percent-encoded for the client's `#`. Escaping an escaped path is destructive — `encodeURI('%5B')` is
+    // `'%255B'` — so the gate / objective texture of the board (`%5Bopt%5Dmerged_textures`, i.e. the client's
+    // `[opt]merged_textures`) 404ed and the red and blue doors never drew (user report). Two things must hold for
+    // every entry: the URL the browser ends up requesting is still the file on disk, and the manifest never stores
+    // a bare `#` — the consumers that do not escape (boardArt.js, the avatar / portrait / skin URLs of assets.js)
+    // would have it cut off as a fragment.
+    let checked = 0, escaped = 0;
+    for (const [g, entries] of Object.entries(manifest.groups)) {
+      for (const [n, e] of Object.entries(entries)) {
+        if (!e?.path) continue;
+        assert.ok(!e.path.includes('#'), `${g}/${n}: a bare '#' in ${e.path} is truncated by the consumers that do not escape`);
+        const sent = manifestUrl(e.path);            // exactly what load.js puts on the wire
+        assert.ok(sent, `${g}/${n}: ${e.path} produced no URL`);
+        assert.ok(existsSync(path.join(ROOT, 'public', decodeURIComponent(sent))), `${g}/${n}: ${e.path} → ${sent}`);
+        checked++;
+        if (sent !== e.path) escaped++;
+      }
+    }
+    assert.ok(checked > 1000, `the manifest carries the board's art (${checked} paths)`);
+    assert.equal(escaped, 0, `${escaped} paths changed under the escape (an escape must survive it unchanged)`);
   });
 });
