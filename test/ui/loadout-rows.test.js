@@ -237,3 +237,17 @@ test('css: the head and the rows share one grid (columns aligned), quick targets
   assert.match(block, /\.lo-detail-wrap \{ display: none; \}/);
   assert.ok(!/\.lo-grid\b/.test(css), 'the old card grid is gone');
 });
+
+// The 自选编队 picker draws the same detail panel (screens/diy.js hands `.lo-detail` the roster's own head), and the
+// detail column plus the panel's horizontal padding change at 1100 px. Written in both places they drifted apart: the
+// picker kept a `1.2fr / 1fr` split and .3rem padding, so the shared `.lo-dhead` wrapped differently up there.
+test('css: the picker body reads the roster\'s detail geometry instead of repeating it', () => {
+  const css = readFileSync(path.join(ROOT, 'public/css/screens/loadout.css'), 'utf8');
+  assert.match(css, /--lo-detail-w: 7rem;[\s\S]*--lo-gap-x: \.22rem;[\s\S]*--lo-pad-x: \.3rem;/, 'one source of truth on `.lo`');
+  assert.match(css, /\.lo-body \{[^}]*grid-template-columns: minmax\(0, 1fr\) minmax\(0, var\(--lo-detail-w\)\);[^}]*gap: var\(--lo-gap-x\);/);
+  assert.match(css, /\.diy-pick__main \{[^}]*grid-template-columns: minmax\(0, 1fr\) minmax\(0, var\(--lo-detail-w\)\);[^}]*gap: var\(--lo-gap-x\);/);
+  assert.match(css, /\.diy-pick \{[^}]*padding: \.12rem var\(--lo-pad-x\) \.14rem;/);
+  assert.match(css, /\.diy-pick \{ padding: \.08rem var\(--lo-pad-x\) \.1rem; \}/);
+  const narrow = css.slice(css.indexOf('@media (max-width: 1100px) {'));
+  assert.match(narrow, /\.lo \{ --lo-detail-w: 6\.4rem; --lo-gap-x: \.16rem; --lo-pad-x: \.2rem; \}/, 'the ≤1100 geometry both screens read');
+});

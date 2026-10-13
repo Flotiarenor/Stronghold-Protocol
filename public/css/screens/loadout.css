@@ -15,6 +15,13 @@
   color: var(--text-hi);
   animation: lo-in 200ms var(--ease-out) backwards;
   overscroll-behavior: contain;
+  /* The list/detail geometry of this screen, shared with the 自选编队 picker's own body (screens/diy.js draws the same
+     detail panel): the detail column and the panel's horizontal padding both change at 1100 px, and the two drifted
+     apart while those numbers were written in both places (the picker kept a `1.2fr / 1fr` split and .3rem padding, so
+     the same `.lo-dhead` — shared CSS, sized in rem against theme.css's fluid root — wrapped differently up there). */
+  --lo-detail-w: 7rem;
+  --lo-gap-x: .22rem;
+  --lo-pad-x: .3rem;
 }
 @keyframes lo-in { from { opacity: 0; } }
 .lo__bg {
@@ -80,8 +87,8 @@
 
 /* ---- body layout -------------------------------------------------------------------------------------------------- */
 .lo-body {
-  flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 7rem);
-  gap: .22rem; padding: .18rem .3rem .22rem;
+  flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, var(--lo-detail-w));
+  gap: var(--lo-gap-x); padding: .18rem var(--lo-pad-x) .22rem;
 }
 .lo-roster { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: .12rem; }
 .lo-detail-wrap { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
@@ -488,11 +495,14 @@
 .diy-bond .bglyph, .diy-bond img { width: max(.16rem, 11px); height: max(.16rem, 11px); }
 /* the picker covers the tab: the roster's own list on the left and its detail on the right (screens/loadoutSections.js
    draws the sections; below 1000 px the detail slides over the list like the roster's) */
-.diy-pick { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; gap: .08rem; padding: .12rem .3rem .14rem; background: var(--bg-1, #0d1110); }
+.diy-pick { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; gap: .08rem; padding: .12rem var(--lo-pad-x) .14rem; background: var(--bg-1, #0d1110); }
 .diy-pick__head { flex: none; display: flex; align-items: center; gap: .08rem; font-size: max(calc(.16 * var(--t)), 11px); }
 .diy-pick__note { flex: 1; min-width: 0; font-size: max(calc(.12 * var(--t)), 9px); color: var(--text-lo); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .diy-pick__x { display: grid; place-items: center; width: max(.4rem, 28px); height: max(.4rem, 28px); color: var(--text-md); background: none; border: 1px solid var(--line-2); cursor: pointer; }
-.diy-pick__main { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: .12rem; }
+/* The picker's two columns mirror the roster's `.lo-body` through the same shared variables: the list takes whatever is
+   left, the detail is `--lo-detail-w`. A `1.2fr / 1fr` split made the detail a SHARE of the window instead — wider than
+   干员调配's on a large screen, narrower on a small one — so the shared `.lo-dhead` wrapped differently here. */
+.diy-pick__main { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, var(--lo-detail-w)); gap: var(--lo-gap-x); }
 .diy-pick__col { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: .06rem; }
 .diy-pick__bar { flex: none; display: flex; align-items: center; gap: .1rem; flex-wrap: wrap; }
 .diy-pick__search { flex: 1 1 2rem; min-width: 120px; height: max(.36rem, 26px); padding: 0 .08rem; font: inherit; font-size: max(calc(.13 * var(--t)), 10px); color: var(--text-hi); background: rgba(255, 255, 255, .04); border: 1px solid var(--line-2); }
@@ -515,7 +525,7 @@
 .lo-entry__diy { color: var(--text-on-mint); background: var(--mint-500); }
 @media (max-width: 760px) {
   .diy { padding: .1rem .16rem .16rem; }
-  .diy-pick { padding: .08rem .12rem .1rem; }
+  .diy-pick { padding: .08rem var(--lo-pad-x) .1rem; }
   .diy-slot { grid-template-columns: auto minmax(0, 1fr); }
   .diy-slot__acts { grid-column: 1 / -1; flex-direction: row; justify-content: flex-end; }
 }
@@ -544,7 +554,8 @@
   .lo-tab { padding: .02rem .08rem; letter-spacing: .04em; }
 }
 @media (max-width: 1100px) {
-  .lo-body { grid-template-columns: minmax(0, 1fr) minmax(0, 6.4rem); gap: .16rem; padding: .12rem .2rem .16rem; }
+  .lo { --lo-detail-w: 6.4rem; --lo-gap-x: .16rem; --lo-pad-x: .2rem; }
+  .lo-body { padding: .12rem var(--lo-pad-x) .16rem; }
   .lo-chip__lbl { display: none; }
   /* the co-op briefing's countdown takes the place of the 已调整 / 同步 chips */
   .lo-deadline ~ .lo-sync, .lo-deadline ~ .lo-count { display: none; }
