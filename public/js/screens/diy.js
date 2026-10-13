@@ -24,7 +24,7 @@ import { OperatorVoice } from '../ui/operatorVoice.js';
 import { SkinSection } from '../ui/skinPicker.js';
 import { LoadoutStats } from '../ui/loadoutStats.js';
 import { CultivationSelects, CultivationSection } from './cultivation.js';
-import { SkillIcon, ModuleGlyph, SkillSection, ModuleSection, rowControlHit } from './loadoutSections.js';
+import { SkillIcon, ModuleGlyph, SkillSection, ModuleSection, ProfFilter, rowControlHit } from './loadoutSections.js';
 import { t } from '../../../shared/i18n.js';
 
 const cx = (...p) => p.flat().filter(Boolean).join(' ');
@@ -238,9 +238,10 @@ function DiyRow({ m, slot, opt, ch, takenTier, draft, selected, ops, onOps, onSe
 }
 
 /**
- * The slot picker: the legal operators of the slot's tier (prototypes first, then the owned 6★; a 原型 / 已持有 filter and
- * a search), the chosen one's skill / module (an owned pick) or its locked selection (a prototype), 确认 / 取消. The
- * state (filter, search, the draft pick, the narrow-screen detail) lives here; DiyPickerView draws it.
+ * The slot picker: the legal operators of the slot's tier (prototypes first, then the owned 6★; a 原型 / 已持有 filter, the
+ * roster's 职业 chips and a search), the chosen one's skill / module (an owned pick) or its locked selection (a prototype),
+ * 确认 / 取消. The state (filter, profession, search, the draft pick, the narrow-screen detail) lives here; DiyPickerView
+ * draws it.
  * @param {{ m: any, slot: any, picks: Record<string, any>, kitted: string[]|null, onDone: (pick: any) => void, onClose: () => void,
  *   ops?: Record<string, any>, onOps?: Function|null }} props
  */
@@ -249,6 +250,7 @@ export function DiyPicker(props) {
   const [narrowDetail, setNarrowDetail] = useState(false); // phones: the detail slides over the list
   const cur = props.picks[props.slot.slotId] || null;
   const [filter, setFilter] = useState('all');
+  const [prof, setProf] = useState(null);
   const [query, setQuery] = useState('');
   const [draft, setDraft] = useState(cur ? { ...cur } : null);
   // Esc cancels only the picker, like its 取消 (GitHub #284, idea from PR #286); the 干员调配 overlay's own Esc skips
@@ -266,14 +268,16 @@ export function DiyPicker(props) {
     return () => window.removeEventListener('keydown', onKey, true);
   }, [props.onClose]);
   return DiyPickerView({ ...props, previewLevel, onPreviewLevel: setPreviewLevel, narrowDetail, onNarrowDetail: setNarrowDetail,
-    filter, query, draft, onFilter: setFilter, onQuery: setQuery, onDraft: setDraft });
+    filter, prof, query, draft, onFilter: setFilter, onProf: setProf, onQuery: setQuery, onDraft: setDraft });
 }
 
 /**
- * The picker's view (no hooks: the tests draw it): `filter` 'all' | 'proto' | 'owned', `query`, `draft` the pick being
- * made (null = none chosen yet) and their setters, `narrowDetail` the phone layout (the detail over the list).
+ * The picker's view (no hooks: the tests draw it): `filter` 'all' | 'proto' | 'owned', `prof` the profession the roster's
+ * chips select (null = every one), `query`, `draft` the pick being made (null = none chosen yet) and their setters,
+ * `narrowDetail` the phone layout (the detail over the list).
  */
-export function DiyPickerView({ m, slot, picks, kitted, onDone, onClose, filter, query, draft, onFilter: setFilter, onQuery: setQuery, onDraft: setDraft,
+export function DiyPickerView({ m, slot, picks, kitted, onDone, onClose, filter, prof = null, query, draft, onFilter: setFilter,
+  onProf = () => {}, onQuery: setQuery, onDraft: setDraft,
   ops = {}, onOps = null, previewLevel = 'elite', onPreviewLevel = () => {}, narrowDetail = false, onNarrowDetail = () => {} }) {
   const D = diyData();
   const cur = picks[slot.slotId] || null;
@@ -281,6 +285,7 @@ export function DiyPickerView({ m, slot, picks, kitted, onDone, onClose, filter,
   const tiers = new Map(diySlotList(D).map((s) => [s.slotId, s.tier]));
   const q = query.trim().toLowerCase();
   const list = options.filter((o) => (filter === 'all' || (filter === 'proto') === o.proto)
+    && (!prof || o.unit?.profession === prof)
     && (!q || [o.unit?.name, o.unit?.appellation, o.unit?.subProfessionName, t(PROF_NAME[o.unit?.profession] || ''), ...o.bonds.map(bondName)].some((x) => typeof x === 'string' && x.toLowerCase().includes(q))));
   const ch = draft ? rowChoices(draft.charId, slot.slotId, D) : null;
   // selecting a row keeps the draft's edits when it is already the chosen operator (the picker's own rule, 0.2.0) and
@@ -326,13 +331,16 @@ export function DiyPickerView({ m, slot, picks, kitted, onDone, onClose, filter,
     </header>
     <div class=${cx('diy-pick__main', narrowDetail && 'is-detail')}>
       <section class="diy-pick__col">
-        <div class="diy-pick__bar">
-          <div class="lo-chips" role="group" aria-label=${t('筛选')}>
-            ${[['all', t('全部')], ['proto', t('原型')], ['owned', t('已持有')]].map(([k, text]) => html`<button key=${k} type="button" class=${cx('lo-chip', filter === k && 'is-on')}
-              aria-pressed=${filter === k ? 'true' : 'false'} data-filter=${k} onClick=${() => setFilter(k)}>${text}</button>`)}
+        <div class="lo-filters">
+          <div class="lo-frow">
+            <div class="lo-chips" role="group" aria-label=${t('筛选')}>
+              ${[['all', t('全部')], ['proto', t('原型')], ['owned', t('已持有')]].map(([k, text]) => html`<button key=${k} type="button" class=${cx('lo-chip', filter === k && 'is-on')}
+                aria-pressed=${filter === k ? 'true' : 'false'} data-filter=${k} onClick=${() => setFilter(k)}>${text}</button>`)}
+            </div>
+            <input type="search" class="diy-pick__search" value=${query} placeholder=${t('搜索干员 / 职业 / 盟约')} aria-label=${t('搜索干员 / 职业 / 盟约')}
+              onInput=${(e) => setQuery(String(e.currentTarget.value).slice(0, 24))} />
           </div>
-          <input type="search" class="diy-pick__search" value=${query} placeholder=${t('搜索干员 / 职业 / 盟约')} aria-label=${t('搜索干员 / 职业 / 盟约')}
-            onInput=${(e) => setQuery(String(e.currentTarget.value).slice(0, 24))} />
+          <div class="lo-frow"><${ProfFilter} m=${m} prof=${prof} onProf=${onProf} /></div>
         </div>
         <div class="lo-list diy-pick__list">
           <${DiyHead} />

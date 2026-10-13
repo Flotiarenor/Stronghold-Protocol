@@ -26,13 +26,13 @@
 import { useEffect, useMemo, useRef, useState } from '../../vendor/hooks.module.js';
 import { html, Icon, MicroLabel, Button, TierChip, TextField, Countdown, Spinner, confirmDialog, hasDeadline, Modal, Fragment } from '../ui/components.js';
 import { Img, UnitThumb } from '../ui/gameComponents.js';
-import { chessAvatarUrl, chessPortraitUrl, subProfIconUrl, bondIconUrl } from '../ui/assetUrls.js';
+import { chessAvatarUrl, chessPortraitUrl, profGlyphUrl, subProfIconUrl, bondIconUrl } from '../ui/assetUrls.js';
 import { GarrisonBlock } from '../ui/detailPanel.js';
 import { data, useData, localAsset, DATA_FILES } from '../data.js';
 import { useStore } from '../store.js';
 import { PHASE } from '../../../shared/constants.js';
 import {
-  MODULE_NONE, PROF_ORDER, PROF_NAME, rosterOf, filterRoster, recordsOf, chessOptions, effectiveChoice, setChoice, resetChoice,
+  MODULE_NONE, PROF_NAME, rosterOf, filterRoster, recordsOf, chessOptions, effectiveChoice, setChoice, resetChoice,
   changedCount, skillLabel, moduleBadge, quickSkillTags, serializeExport, parseImport, LOADOUT_IMPORT_MAX_BYTES,
   opsOf, setOps, resetOps,
 } from '../ui/loadoutModel.js';
@@ -45,7 +45,7 @@ import { OwnershipPanel, useOwnershipRoster } from './ownership.js';
 import { DiyPanel, diyData } from './diy.js';
 // the roster's detail sections and their pieces live in screens/loadoutSections.js (the 自选编队 picker draws the same
 // ones); re-exported here, where the tests and the screen have always imported them from
-import { ModuleGlyph, ModuleInfo, SkillOption, SkillIcon, SkillSection, ModuleSection, rowControlHit } from './loadoutSections.js';
+import { ModuleGlyph, ModuleInfo, SkillOption, SkillIcon, SkillSection, ModuleSection, ProfFilter, rowControlHit } from './loadoutSections.js';
 export { ModuleGlyph, ModuleInfo, SkillOption };
 import { LoadoutStats } from '../ui/loadoutStats.js';
 export { LoadoutStats, statsPreview } from '../ui/loadoutStats.js';
@@ -99,12 +99,7 @@ function exportFilename(now = new Date(), what = 'loadout') {
   return `stronghold-${what}-${now.getFullYear()}${p(now.getMonth() + 1)}${p(now.getDate())}-${p(now.getHours())}${p(now.getMinutes())}.json`;
 }
 
-/** Square profession glyph (manifest prof.large: black glyph on white, drawn as a white glyph by loadout.css). */
-function profGlyphUrl(m, prof) {
-  const k = String(prof || '').toLowerCase();
-  const v = m && m.prof && m.prof.large ? m.prof.large[k] : null;
-  return typeof v === 'string' ? v : null;
-}
+
 
 
 // ---- roster rows -----------------------------------------------------------------------------------------------------
@@ -272,11 +267,7 @@ function Filters({ m, filters, onFilters, bonds }) {
         onInput=${(v) => set({ query: String(v).slice(0, 24) })} />
     </div>
     <div class="lo-frow">
-      <div class="lo-chips lo-chips--prof" role="group" aria-label=${t('职业')}>
-        ${PROF_ORDER.map((p) => html`<button key=${p} type="button" class=${cx('lo-chip', 'lo-chip--prof', filters.prof === p && 'is-on')}
-          aria-pressed=${filters.prof === p ? 'true' : 'false'} title=${t(PROF_NAME[p])} onClick=${() => set({ prof: filters.prof === p ? null : p })}>
-          <${Img} src=${profGlyphUrl(m, p)} class="lo-chip__icon lo-profglyph" fallback=${html`<span>${t(PROF_NAME[p])[0]}</span>`} /><span class="lo-chip__lbl">${t(PROF_NAME[p])}</span></button>`)}
-      </div>
+      <${ProfFilter} m=${m} prof=${filters.prof} onProf=${(prof) => set({ prof })} />
       <label class="lo-select">
         <span class="lo-select__k">${t('盟约')}</span>
         <select value=${filters.bond || ''} onChange=${(e) => set({ bond: e.currentTarget.value || null })} aria-label=${t('按盟约筛选')}>

@@ -305,6 +305,29 @@ describe('自选编队 tab (screens/diy.js)', () => {
     [...walk(tree)].find((v) => v.props?.['data-testid'] === 'diy-confirm').props.onClick();
     assert.deepEqual(done.at(-1), { charId: SHARP });
   });
+
+  test('the picker: the roster\'s 职业 chips filter the list by profession', () => {
+    let prof = null;
+    const view = () => expand(DiyPickerView({ m: null, slot: { slotId: T6A, tier: 6, shopLevel: 6 }, picks: {}, kitted: KIT, onDone() {}, onClose() {},
+      filter: 'all', prof, query: '', draft: null, onFilter() {}, onProf: (p) => { prof = p; }, onQuery() {}, onDraft() {} }));
+    const rows = (tree) => [...walk(tree)].filter((v) => hasClass(v, 'diy-opt')).map((v) => v.props['data-char']);
+    const chips = (tree) => [...walk(tree)].filter((v) => hasClass(v, 'lo-chip--prof'));
+    const all = rows(view());
+    assert.ok(all.length > 2, 'the tier-6 slot lists several operators');
+    assert.equal(chips(view()).length, 8, 'one chip per profession, the roster\'s own row');
+    assert.deepEqual(chips(view()).filter((v) => v.props['aria-pressed'] === 'true'), [], 'nothing pressed while the filter is off');
+    // pressing a chip asks for that profession; the row is the shared ProfFilter, so pressing it again clears it
+    chips(view())[0].props.onClick();
+    assert.equal(prof, 'PIONEER');
+    const pioneers = rows(view());
+    assert.ok(pioneers.length && pioneers.length < all.length, `${pioneers.length} of ${all.length} are 先锋`);
+    for (const id of pioneers) assert.equal(DATA.backups.units[id].profession, 'PIONEER', `${id} is a 先锋`);
+    const on = chips(view()).find((v) => v.props['aria-pressed'] === 'true');
+    assert.ok(on && on.props.title === '先锋' && hasClass(on, 'is-on'), 'the pressed chip is the one that filters');
+    on.props.onClick();
+    assert.equal(prof, null, 'a second press clears the filter');
+    assert.deepEqual(rows(view()).length, all.length);
+  });
 });
 
 // ---- match UI -------------------------------------------------------------------------------------------------------------
