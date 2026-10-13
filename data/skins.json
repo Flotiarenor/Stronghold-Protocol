@@ -2,7 +2,7 @@
  "version": 1,
  "counts": {
   "chars": 174,
-  "skins": 275
+  "skins": 273
  },
  "chars": {
   "char_003_kalts": [
@@ -14,12 +14,8 @@
    {
     "id": "char_003_kalts@sale#14",
     "name": "时遗",
-    "group": "忒斯特收藏/XVI"
-   },
-   {
-    "id": "char_003_kalts@sale#14_sp",
-    "name": "时遗",
-    "group": "忒斯特收藏/XVI"
+    "group": "忒斯特收藏/XVI",
+    "spIllust": true
    }
   ],
   "char_010_chen": [
@@ -250,12 +246,8 @@
    {
     "id": "char_1041_angel2@iteration#6",
     "name": "寻翼之歌",
-    "group": "命途迭代/VI"
-   },
-   {
-    "id": "char_1041_angel2@iteration#6_sp",
-    "name": "寻翼之歌",
-    "group": "命途迭代/VI"
+    "group": "命途迭代/VI",
+    "spIllust": true
    }
   ],
   "char_1042_phatm2": [

@@ -18,6 +18,15 @@ import { data } from '../data.js';
 export const SKINS_PREF = 'skins';
 export const SYNC_DEBOUNCE_MS = 500;
 export const RETRY_MS = 1500;
+/**
+ * The library index's id for a skin's SECOND official illustration.
+ *
+ * The official skin table gives a few skins two of them (`illustId` and the 「sp」 差分立绘 `spIllustId`), and the
+ * extractor's `illust` tier lists the sp page under `<skinId>_sp`. It is not a skin of its own: `availableSkins` folds
+ * it into the skin it belongs to (`spIllust`, the picker's enlarged preview) instead of offering a duplicate tile
+ * (docs/SKINS.md; tools/skin-library/build-catalogue.mjs uses the same suffix).
+ */
+export const SP_ILLUSTR_SUFFIX = '_sp';
 
 function readStored() {
   const raw = loadPref(SKINS_PREF, null);
@@ -137,7 +146,8 @@ export function libraryImage(charId, skinId, kind) {
  * the operator's own chibi — an image alone is not enough, and `libraryOnly` marks those). A local copy wins when
  * several have it: it is the client's own bytes, and the only source that cannot vanish with an upstream repository.
  * @param {string} charId
- * @returns {{ id: string, name: string, group: string, installed: boolean, source: 'local'|'web'|null, libraryOnly: boolean }[]}
+ * @returns {{ id: string, name: string, group: string, installed: boolean, source: 'local'|'web'|null, libraryOnly: boolean,
+ *   spIllust: string|null }[]} `spIllust` is the skin's second official illustration where the client ships one, else null
  */
 export function availableSkins(charId) {
   const list = data.get('skins')?.chars?.[charId];
@@ -146,8 +156,12 @@ export function availableSkins(charId) {
   const webHere = data.get('assets')?.chars?.[charId]?.skins || {};
   // An operator whose skins the CATALOGUE does not list can still have library images. Those are appended so the
   // appearance is visible, but only a skin with a MODEL is offered as a choice (see `source` above).
+  //
+  // `<skinId>_sp` is NOT one of them: it is the same skin's SECOND official illustration (`spIllustId` — 凯尔希 时遗,
+  // 新约能天使 寻翼之歌, docs/SKINS.md), which the library index lists under its own derived id. Appending it would
+  // draw a tile that looks like a duplicate of a skin that is already there, so it is folded into that skin below.
   const known = new Set((Array.isArray(list) ? list : []).map((s) => s.id));
-  const extra = Object.keys(lib).filter((id) => id !== charId && !known.has(id)).sort();
+  const extra = Object.keys(lib).filter((id) => id !== charId && !known.has(id) && !id.endsWith(SP_ILLUSTR_SUFFIX)).sort();
   const rows = [
     ...(Array.isArray(list) ? list : []),
     ...extra.map((id) => ({ id, name: id.split('@')[1] || id, group: '' })),
@@ -156,7 +170,10 @@ export function availableSkins(charId) {
     const model = localHere[s.id] ? 'local' : (webHere[s.id] ? 'web' : null);
     // an image in the library is not a model: choosing such a skin would leave the renderer on the operator's chibi
     const libraryOnly = model === null && !!lib[s.id];
-    return { id: s.id, name: s.name, group: s.group || '', installed: model !== null, source: model, libraryOnly };
+    // The second illustration of a skin the official table gives two of (the catalogue's `spIllust` flag): the picker's
+    // enlarged preview shows it beside the first. null for every other skin, and for one whose sp page is not here.
+    const spIllust = s.spIllust ? (lib[`${s.id}${SP_ILLUSTR_SUFFIX}`]?.illust || null) : null;
+    return { id: s.id, name: s.name, group: s.group || '', installed: model !== null, source: model, libraryOnly, spIllust };
   });
 }
 

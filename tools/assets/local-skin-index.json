@@ -1,14 +1,13 @@
 {
  "version": 1,
  "counts": {
-  "skins": 275,
+  "skins": 273,
   "operators": 174
  },
  "note": "Local-client operator skins (tools/local-extract/extract.py `skins`): the stem → skinId mapping the extractor writes to public/assets/local/spine/op/<charId>/<stem>/ and the build step reads to fill chars[charId].skins[skinId].spineLocal (docs/SKINS.md). Derived from docs/research/08-skins.json — the skins of the playable chess of data/chess.json.",
  "byStem": {
   "char_003_kalts_boc_6": "char_003_kalts@boc#6",
   "char_003_kalts_sale_14": "char_003_kalts@sale#14",
-  "char_003_kalts_sale_14_sp": "char_003_kalts@sale#14_sp",
   "char_010_chen_nian_2": "char_010_chen@nian#2",
   "char_010_chen_sale_10": "char_010_chen@sale#10",
   "char_017_huang_as_1": "char_017_huang@as#1",
@@ -46,7 +45,6 @@
   "char_103_angel_wild_1": "char_103_angel@wild#1",
   "char_1040_blaze2_winter_5": "char_1040_blaze2@winter#5",
   "char_1041_angel2_iteration_6": "char_1041_angel2@iteration#6",
-  "char_1041_angel2_iteration_6_sp": "char_1041_angel2@iteration#6_sp",
   "char_1042_phatm2_sightseer_4": "char_1042_phatm2@sightseer#4",
   "char_1043_leizi2_game_8": "char_1043_leizi2@game#8",
   "char_1044_hsgma2_whirlwind_11": "char_1044_hsgma2@whirlwind#11",

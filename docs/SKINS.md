@@ -12,7 +12,7 @@ line by line so they can be re-applied after merging an upstream release.
 ```
 tools/skin-library/library-index.json   what the LOCAL CLIENT holds — the three image tiers of every operator, written
         │                               by `extract.py --only library` (part of setup --local). This decides WHICH skins
-        │                               exist: 275 on 174 operators, including the 自选编队 pool's operators.
+        │                               exist: 273 on 174 operators, including the 自选编队 pool's operators.
         │
         ├── tools/skin-library/build-catalogue.mjs ──→ data/skins.json   the catalogue the CLIENT reads: id, name,
         │        (tools/build-skins.mjs delegates here)                  series. No URLs — an uninstalled skin has no
@@ -64,13 +64,23 @@ with 潜能与练度 last. A skill and a module are usually left on their defaul
 one-off set-and-forget, while the appearance is what a player opens the panel to change. Both 干员调配
 (`screens/loadout.js Detail`) and the 自选编队 picker's detail (`screens/diy.js DiyPickerView`) follow it.
 
+**A few skins carry two official illustrations.** The official `charSkins` record holds `illustId` and, for 4 skins
+upstream (克洛丝 星月漂流记, 凯尔希 时遗, 阿米娅 于万千宇宙之中, 新约能天使 寻翼之歌 — the more expensive and limited
+ones), a second 「sp」 差分立绘 `spIllustId`: one skin, two posters. 2 of the four are operators this project fields.
+The library index lists the sp page under `<skinId>_sp`, and **that is not a skin**: the catalogue folds it into the
+skin it belongs to as `spIllust: true` instead of emitting a second entry (`tools/skin-library/build-catalogue.mjs`),
+`availableSkins()` keeps it out of the library-only rows (`public/js/ui/skins.js`), and `client_skin_plan()` skips the
+suffix so no model group is planned for a page that has no model. Listing it as a skin is what made the picker draw two
+identical 「寻翼之歌」 tiles, the second one dead with 「这张外观的模型不在本机客户端里，只能预览」. The picker's
+enlarged preview (`ui/skinPicker.js SkinPreview`) shows both pages of a flagged skin side by side, stacked on a phone.
+
 ## New files
 
 | Path | What |
 |---|---|
 | `docs/research/08-skins.json` | Static research table: `{ meta, skins: { [charId]: [{ skinId, stem, name, group, avatar, battleSpine }] } }`. Sources skin NAMES and the mirror URLs; no longer decides which skins exist |
 | `tools/skin-library/library-index.json` | What the local client holds: `tiers.avatar/portrait/illust` → asset id → `{ path, w, h, charId, skinId }`. Decides which skins exist |
-| `tools/skin-library/build-catalogue.mjs` | `library-index.json` (+ names from the official `skin_table.json` cache) → `data/skins.json` |
+| `tools/skin-library/build-catalogue.mjs` | `library-index.json` (+ names from the official `skin_table.json` cache) → `data/skins.json`. Folds a skin's `<skinId>_sp` second illustration into the skin as `spIllust` instead of emitting a row |
 | `tools/skin-library/used-operators.mjs` | Reports the library's coverage of the operators the project fields (`chess.json` ∪ `backups.json` `diy`) |
 | `tools/build-skins.mjs` | Delegates to `build-catalogue.mjs`; kept so an older command still works |
 | `tools/local-skins-meta.mjs` | Metadata (clips, durations, bounds) of the extracted models → `tools/assets/local-skins-meta.json`. Run by `extract.py` after the `skins` job; the client's `validSpine()` needs the clips, so a stale file hides skins |
@@ -78,9 +88,9 @@ one-off set-and-forget, while the appearance is what a player opens the panel to
 | `server/skinInstall.js` | Serialised background install queue: why it is queued, why it is never awaited (8 s client timeout) |
 | `data/skins.json` | The client's catalogue (no URLs) |
 | `data/skins-installed.json` | Which skin ids are installed — the single source of truth the build reads |
-| `public/js/ui/skins.js` | Client store + `room.skins` sync + install requests + manifest reload on `skins.changed` |
-| `public/js/ui/skinPicker.js` | The 皮肤 section of 干员调配 and of the 自选编队 picker (self-contained: `screens/loadout.js` and `screens/diy.js` only name it) |
-| `test/skins.test.js`, `test/skins-protocol.test.js`, `test/ui/skins.e2e.test.js` | Lookup, wire format, real-browser picker |
+| `public/js/ui/skins.js` | Client store + `room.skins` sync + install requests + manifest reload on `skins.changed`. `availableSkins()` folds `<skinId>_sp` into the base skin's `spIllust` URL instead of appending it as a library-only row |
+| `public/js/ui/skinPicker.js` | The 皮肤 section of 干员调配 and of the 自选编队 picker (self-contained: `screens/loadout.js` and `screens/diy.js` only name it). `SkinPreview` shows both illustrations of a skin the catalogue flags `spIllust` |
+| `test/skins.test.js`, `test/skins-protocol.test.js`, `test/skin-catalogue.test.js`, `test/ui/skin-picker.test.js`, `test/ui/skins.e2e.test.js` | Lookup, wire format, catalogue shape (one row per skin), picker rows + the dual preview, real-browser picker |
 
 ## Edits to existing files
 
@@ -104,11 +114,12 @@ one-off set-and-forget, while the appearance is what a player opens the panel to
 | `server/match/PlayerState.js` | `pieceView()` | includes `skin` on prep board/hand/temp piece views |
 | `server/sim/snapshot.js` | `unitInfo()` | `skin: u.skin ?? undefined` — **`undefined`, not `null`**: `JSON.stringify` drops it, so the `DESIGN §8.2` wire-format contract test still passes and an install with no skins is byte-identical to before |
 | `public/js/assets.js` | `spineEntry()` | `opts.skin` → `chars[id].skins[id].spine`, else the operator's own model |
+| `tools/local-extract/extract.py` | `LIBRARY_ILLUST` / `client_skin_plan()` | the `illust` tier reads `illustId` **and** `spIllustId`, listing the second page under `<skinId>_sp` (a listing of art, not a skin); `client_skin_plan()` skips that suffix, so no model group is planned for a page with no model |
 | `public/js/assets.js` | `avatarUrl()` & `hasBackSpine()` | supports `opts.skin` for avatar; `hasBack(id, skinId)` forwards skin |
 | `public/js/render/units.js` | `_loadSpine()` & `_loadPicture()` | passes `skin: this.info.skin` to spine and avatar diamond fallback |
 | `public/js/render/units.js` | `_wantsBack()` | asks `hasBack(id, this.info.skin)` |
 | `public/js/render/app.js` | `pieceInfo()` and `addInfo()` | `skin: piece.skin ?? skinFor(baseId) ?? null` / `skin: u.skin ?? null`; `sig` includes `skin` to drop cache on switch |
-| `public/js/data.js` | `DATA_FILES` | `skins: 'skins.json'` |
+| `public/js/data.js` | `DATA_FILES` | `skins: 'skins.json'` — a row may carry `spIllust: true` (a skin with a second official illustration) |
 | `public/js/ui/gameComponents.js` | `GAME_FILES` | `'skins'` — `test/ui/playtest3.test.js` requires every file the in-match UI reads to be awaited by the match screen, and 干员调配 is reachable during a match |
 | `public/js/screens/loadout.js` | imports + `Detail()` | import `SkinSection`, then `<${SkinSection} chess=${chess} />`. **Two lines** — the section itself is entirely in `ui/skinPicker.js` |
 | `public/js/screens/diy.js` | imports + `DiyPickerView()` | the same two lines in the picker's detail, with `chess=${{ ...base, charId: draft.charId, chessId: slot.slotId }}`: a 自选 slot's own base record is the `isDiy` chess `freezeSkins` and `PlayerBasics.setSkins` accept, and `MatchViews` reads `ps.skins[rec.baseId || piece.id]`, so a slot fielded as its golden form keeps the skin |

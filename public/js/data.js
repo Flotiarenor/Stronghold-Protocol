@@ -46,8 +46,10 @@ export const DATA_FILES = Object.freeze({
   assets: 'assets.json',
   // 补位 stand-ins (DATA.md §18): the bodies the 干员持有 screen, the cards and the detail card compose (shared/standIn.js)
   backups: 'backups.json',
-  // 干员皮肤目录 (docs/SKINS.md): { chars: { [charId]: [{ id, name, group }] } } — every skin the project knows,
-  // installed or not. The URLs of an installed one come from `assets` above; this file never carries URLs.
+  // 干员皮肤目录 (docs/SKINS.md): { chars: { [charId]: [{ id, name, group, spIllust? }] } } — every skin the project
+  // knows, installed or not. The URLs of an installed one come from `assets` above; this file never carries URLs.
+  // `spIllust: true` marks a skin the official table gives a second 「sp」 illustration to (ui/skinPicker.js shows
+  // both in the enlarged preview).
   skins: 'skins.json',
   // Skin models extracted from the LOCAL game client (docs/SKINS.md, tools/local-extract extract.py): the local
   // counterpart of chars[charId].skins in data/assets.json. Present only where someone ran the extraction; the

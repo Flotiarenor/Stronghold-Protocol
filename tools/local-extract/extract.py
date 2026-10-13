@@ -1181,8 +1181,16 @@ LIBRARY_PORTRAIT = ('portrait', 'opportrait', 'arts/charportraits/portraits_hub.
                     ('portraitId', 'spAvatarId'), '180x360')
 # The illustration is NOT packed by a hub: it lives in skinpack/<charId>.ab next to the skin's Spine model, as
 # `<clientStem>b` (static, 1024–1416 px) and `<clientStem>` (the dynamic page, 2200–2508 px, deliberately skipped).
+#
+# `spIllustId` is read with `illustId` because it is the same skin's SECOND illustration (the official table gives one
+# to 4 skins: 克洛丝 星月漂流记, 凯尔希 时遗, 阿米娅 于万千宇宙之中, 新约能天使 寻翼之歌) — the picker shows both. Its
+# page is listed under `<skinId>_sp` (`SP_ILLUSTR_SUFFIX`): the library index is a listing of the client's art, but that
+# entry is NOT a skin — client_skin_plan skips it and the catalogue folds it into the skin it belongs to (docs/SKINS.md).
 LIBRARY_ILLUST = ('illust', 'opillust', 'skinpack/<charId>.ab', None, ('illustId', 'spIllustId'), 'variable')
 LIBRARIES = (LIBRARY_AVATAR, LIBRARY_PORTRAIT, LIBRARY_ILLUST)
+# The suffix that marks a second illustration rather than a skin of its own (the same constant in
+# tools/skin-library/build-catalogue.mjs and public/js/ui/skins.js).
+SP_ILLUSTR_SUFFIX = '_sp'
 LIBRARY_ROOT = 'library'
 # The library's own folder: everything this extractor writes for the operator image library lands under
 # tools/skin-library/ (the index below, plus the generators added alongside it).
@@ -1387,7 +1395,12 @@ def client_skin_plan(used):
     its own art, so a skin no research table lists is extracted all the same. The index carries `charId` and `skinId`
     on every entry, so no stem has to be parsed back into an id here.
 
-    `stem` is the URL-safe form (`#` → `_`) the manifest groups use; `client` is the name the bundle itself uses."""
+    `stem` is the URL-safe form (`#` → `_`) the manifest groups use; `client` is the name the bundle itself uses.
+
+    A `<skinId>_sp` entry is skipped: the official skin table gives a few skins TWO illustrations (`illustId` and the
+    「sp」 差分立绘 `spIllustId` — 凯尔希 时遗, 新约能天使 寻翼之歌 here), and the `illust` tier lists the second page
+    under that derived id. It is not a skin and has no model, so planning it only produced a model group holding
+    nothing but an illust.png (docs/SKINS.md; tools/skin-library/build-catalogue.mjs folds it into `spIllust`)."""
     try:
         tiers = json.loads(LIBRARY_INDEX.read_text(encoding='utf-8')).get('tiers') or {}
     except (OSError, ValueError):
@@ -1396,6 +1409,8 @@ def client_skin_plan(used):
     for entry in (tiers.get('illust') or {}).values():
         skin_id, char_id = entry.get('skinId'), entry.get('charId')
         if not skin_id or not char_id or char_id not in used:
+            continue
+        if skin_id.endswith(SP_ILLUSTR_SUFFIX):
             continue
         plan.setdefault(char_id, []).append(
             {'skinId': skin_id, 'stem': skin_id.replace('@', '_').replace('#', '_'),

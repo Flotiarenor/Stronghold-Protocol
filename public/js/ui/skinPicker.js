@@ -64,6 +64,21 @@ function skinIllust(charId, skinId) {
 }
 
 /**
+ * The enlarged preview: the skin's illustration, and — for the few skins the official table gives TWO illustrations
+ * (`spIllustId`: 凯尔希 时遗, 新约能天使 寻翼之歌; docs/SKINS.md) — the second one beside it.
+ *
+ * A plain component taking URLs rather than the store, so the markup can be tested without a browser.
+ * @param {{ art?: string|null, second?: string|null }} props
+ */
+export function SkinPreview({ art = null, second = null }) {
+  if (!art && !second) return null;
+  return html`<div class=${cx('lo-skin-preview', second && 'lo-skin-preview--dual')}>
+    ${art ? html`<img src=${art} alt="" />` : null}
+    ${second ? html`<img src=${second} alt="" />` : null}
+  </div>`;
+}
+
+/**
  * 皮肤 section for one operator.
  * @param {{ chess: any, net?: any }} props `chess` is the chess record of the detail panel; `net` is injectable for tests
  */
@@ -93,6 +108,9 @@ export function SkinSection({ chess, net = appNet }) {
 
   const chosen = s.entries[chessId] || null;
   const previewName = preview ? (list.find((x) => x.id === preview)?.name || '') : '';
+  // the preview's art: the illustration, else the avatar; plus the second illustration of a two-illustration skin
+  const previewArt = preview ? (skinIllust(charId, preview) || skinAvatar(charId, preview)) : null;
+  const previewSecond = preview ? (list.find((x) => x.id === preview)?.spIllust || null) : null;
   // The default appearance is a real outfit, so its tile gets real art: the operator's own 180x360 portrait from
   // data/assets.json (a skin's own series means nothing for it). A manifest that has not loaded yet leaves the
   // placeholder, which is what this tile used to show always.
@@ -165,9 +183,7 @@ export function SkinSection({ chess, net = appNet }) {
       })}
     </div>
     <${Modal} open=${!!preview} title=${previewName || t('皮肤预览')} micro="SKIN PREVIEW" onClose=${() => setPreview(null)} width="min(92vw, 900px)">
-      ${skinIllust(charId, preview) || skinAvatar(charId, preview)
-        ? html`<div class="lo-skin-preview"><img src=${skinIllust(charId, preview) || skinAvatar(charId, preview)} alt="" /></div>`
-        : null}
+      <${SkinPreview} art=${previewArt} second=${previewSecond} />
     <//>
   </section>`;
 }
