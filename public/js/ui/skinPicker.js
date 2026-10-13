@@ -16,7 +16,7 @@ import { useStore, shallowEqual } from '../store.js';
 import { data } from '../data.js';
 import { toast } from './toasts.js';
 import { net as appNet } from '../net.js';
-import { skinsStore, availableSkins, loadSkinData, setSkin, clearSkin, requestSkinInstall, libraryImage } from './skins.js';
+import { skinsStore, availableSkins, loadSkinData, setSkin, clearSkin, chosenSkin, requestSkinInstall, libraryImage } from './skins.js';
 import { t } from '../../../shared/i18n.js';
 
 const cx = (...p) => p.flat().filter(Boolean).join(' ');
@@ -106,7 +106,9 @@ export function SkinSection({ chess, net = appNet }) {
   // the section for them made the panel a different shape per operator (the header count is dropped for them too).
   const list = availableSkins(charId);
 
-  const chosen = s.entries[chessId] || null;
+  // 默认 unless this chess really holds one of THIS operator's skins: ui/skins.js chosenSkin — 自选编队 keeps a slot's
+  // chess id while its operator changes, so a stored id can name the previous operator's skin, which no tile matches
+  const chosen = chosenSkin(charId, chessId, s.entries);
   const previewName = preview ? (list.find((x) => x.id === preview)?.name || '') : '';
   // the preview's art: the illustration, else the avatar; plus the second illustration of a two-illustration skin
   const previewArt = preview ? (skinIllust(charId, preview) || skinAvatar(charId, preview)) : null;

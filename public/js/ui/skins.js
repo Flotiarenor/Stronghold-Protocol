@@ -177,6 +177,26 @@ export function availableSkins(charId) {
   });
 }
 
+/**
+ * The skin this operator really has chosen for `chessId`, or null (默认).
+ *
+ * The store is keyed by CHESS id, and 自选编队 reuses a slot's chess id when its operator is changed (`screens/diy.js`
+ * hands the picker the slot's own chess id): the entry then names a skin of the operator that was there BEFORE, which
+ * no tile of the current one matches. Rendering it as the choice leaves every tile unselected — 默认 included — so a
+ * stored id that is not in `availableSkins(charId)` counts as no choice at all, the same fallback the renderer and the
+ * server make for a mismatched skin (`assets.js spineEntry`, `PlayerBasics.setSkins`). The stored entry is left alone:
+ * switching the slot back to the previous operator brings its skin back.
+ * @param {string} charId the operator the panel shows
+ * @param {string} chessId the chess the choice is stored under
+ * @param {Record<string, string>} [entries] defaults to the live store
+ * @returns {string|null}
+ */
+export function chosenSkin(charId, chessId, entries = skinsStore.get().entries) {
+  const id = (entries && entries[chessId]) || null;
+  if (!id) return null;
+  return availableSkins(charId).some((x) => x.id === id) ? id : null;
+}
+
 /** Where a skin's MODEL comes from on this server ('local' | 'web' | null). @param {string} charId */
 export function skinSource(charId, skinId) {
   if (data.get('skinsLocal')?.chars?.[charId]?.skins?.[skinId]) return 'local';

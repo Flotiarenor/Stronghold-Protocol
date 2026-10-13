@@ -25,7 +25,7 @@ globalThis.fetch = async (url) => {
 };
 
 const { data } = await import('../../public/js/data.js');
-const { availableSkins, libraryImage, SP_ILLUSTR_SUFFIX } = await import('../../public/js/ui/skins.js');
+const { availableSkins, chosenSkin, libraryImage, SP_ILLUSTR_SUFFIX } = await import('../../public/js/ui/skins.js');
 const { SkinPreview } = await import('../../public/js/ui/skinPicker.js');
 
 await data.loadAll('skins', 'library');
@@ -90,5 +90,30 @@ describe('皮肤 picker: the enlarged preview', () => {
 
   test('no art at all renders nothing', () => {
     assert.equal(SkinPreview({ art: null, second: null }), null);
+  });
+});
+
+// 自选编队 reuses one slot's chess id for whichever operator is picked into it (screens/diy.js passes `slot.slotId`),
+// so the stored entry can name the PREVIOUS operator's skin. That used to leave the whole section unselected — 默认
+// included, because the 默认 tile reads `chosen ? 'false' : 'true'` — instead of falling back to 默认.
+describe('皮肤 picker: a slot whose operator changed', () => {
+  const SLOT = 'chess_char_5_diy1_a';
+
+  test('a skin of another operator is not a choice: the section shows 默认', () => {
+    assert.equal(chosenSkin(ANGEL, SLOT, { [SLOT]: 'char_003_kalts@sale#14' }), null);
+    assert.equal(chosenSkin(KALTS, SLOT, { [SLOT]: 'char_1041_angel2@iteration#6' }), null);
+    // the same entry IS a choice for the operator it belongs to, so switching back brings the skin back
+    assert.equal(chosenSkin(KALTS, SLOT, { [SLOT]: 'char_003_kalts@sale#14' }), 'char_003_kalts@sale#14');
+  });
+
+  test('an id the catalogue no longer holds (or never held) is not a choice either', () => {
+    assert.equal(chosenSkin(ANGEL, SLOT, { [SLOT]: 'char_1041_angel2@iteration#6_sp' }), null);
+    assert.equal(chosenSkin(ANGEL, SLOT, { [SLOT]: 'char_1041_angel2@gone#9' }), null);
+  });
+
+  test('one of this operator\'s skins is a choice, and no entry at all is 默认', () => {
+    assert.equal(chosenSkin(ANGEL, SLOT, { [SLOT]: 'char_1041_angel2@iteration#6' }), 'char_1041_angel2@iteration#6');
+    assert.equal(chosenSkin(ANGEL, SLOT, {}), null);
+    assert.equal(chosenSkin(ANGEL, SLOT, { [SLOT]: '' }), null);
   });
 });

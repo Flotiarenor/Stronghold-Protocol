@@ -88,7 +88,7 @@ enlarged preview (`ui/skinPicker.js SkinPreview`) shows both pages of a flagged 
 | `server/skinInstall.js` | Serialised background install queue: why it is queued, why it is never awaited (8 s client timeout) |
 | `data/skins.json` | The client's catalogue (no URLs) |
 | `data/skins-installed.json` | Which skin ids are installed — the single source of truth the build reads |
-| `public/js/ui/skins.js` | Client store + `room.skins` sync + install requests + manifest reload on `skins.changed`. `availableSkins()` folds `<skinId>_sp` into the base skin's `spIllust` URL instead of appending it as a library-only row |
+| `public/js/ui/skins.js` | Client store + `room.skins` sync + install requests + manifest reload on `skins.changed`. `availableSkins()` folds `<skinId>_sp` into the base skin's `spIllust` URL instead of appending it as a library-only row. `chosenSkin()` reports a stored entry that is not one of this operator's skins as 默认 — 自选编队 keeps a slot's chess id while its operator changes (`screens/diy.js` passes `slot.slotId`), so the entry can name the previous operator's skin, and rendering it as the choice left every tile unselected (默认 included) |
 | `public/js/ui/skinPicker.js` | The 皮肤 section of 干员调配 and of the 自选编队 picker (self-contained: `screens/loadout.js` and `screens/diy.js` only name it). `SkinPreview` shows both illustrations of a skin the catalogue flags `spIllust` |
 | `test/skins.test.js`, `test/skins-protocol.test.js`, `test/skin-catalogue.test.js`, `test/ui/skin-picker.test.js`, `test/ui/skins.e2e.test.js` | Lookup, wire format, catalogue shape (one row per skin), picker rows + the dual preview, real-browser picker |
 
