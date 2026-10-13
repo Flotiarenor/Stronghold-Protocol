@@ -59,6 +59,11 @@ Three properties are load-bearing:
   as the `.skel`/`.atlas`; `url_safe_atlas` / `page_filename`) — every other local-client URL keeps the client's id and
   goes through `asset_url()`, which percent-encodes `#` as `%23`.
 
+One placement rule follows: the 皮肤 section sits directly under the operator's name and above 技能 / 局内数值 / 模组,
+with 潜能与练度 last. A skill and a module are usually left on their defaults and the two 潜能 / 练度 selects are a
+one-off set-and-forget, while the appearance is what a player opens the panel to change. Both 干员调配
+(`screens/loadout.js Detail`) and the 自选编队 picker's detail (`screens/diy.js DiyPickerView`) follow it.
+
 ## New files
 
 | Path | What |
@@ -74,7 +79,7 @@ Three properties are load-bearing:
 | `data/skins.json` | The client's catalogue (no URLs) |
 | `data/skins-installed.json` | Which skin ids are installed — the single source of truth the build reads |
 | `public/js/ui/skins.js` | Client store + `room.skins` sync + install requests + manifest reload on `skins.changed` |
-| `public/js/ui/skinPicker.js` | The 皮肤 section of 干员调配 (self-contained: `screens/loadout.js` only names it) |
+| `public/js/ui/skinPicker.js` | The 皮肤 section of 干员调配 and of the 自选编队 picker (self-contained: `screens/loadout.js` and `screens/diy.js` only name it) |
 | `test/skins.test.js`, `test/skins-protocol.test.js`, `test/ui/skins.e2e.test.js` | Lookup, wire format, real-browser picker |
 
 ## Edits to existing files
@@ -106,6 +111,7 @@ Three properties are load-bearing:
 | `public/js/data.js` | `DATA_FILES` | `skins: 'skins.json'` |
 | `public/js/ui/gameComponents.js` | `GAME_FILES` | `'skins'` — `test/ui/playtest3.test.js` requires every file the in-match UI reads to be awaited by the match screen, and 干员调配 is reachable during a match |
 | `public/js/screens/loadout.js` | imports + `Detail()` | import `SkinSection`, then `<${SkinSection} chess=${chess} />`. **Two lines** — the section itself is entirely in `ui/skinPicker.js` |
+| `public/js/screens/diy.js` | imports + `DiyPickerView()` | the same two lines in the picker's detail, with `chess=${{ ...base, charId: draft.charId, chessId: slot.slotId }}`: a 自选 slot's own base record is the `isDiy` chess `freezeSkins` and `PlayerBasics.setSkins` accept, and `MatchViews` reads `ps.skins[rec.baseId || piece.id]`, so a slot fielded as its golden form keeps the skin |
 | `public/js/main.js` | imports + boot | `installSkinsSync({ net })` |
 | `public/css/screens/loadout.css` | end | `.lo-skins` / `.lo-skin` tiles (mirrors `.lo-mods`) |
 | `data/assets.json` | — | regenerated; carries `chars[charId].skins` for whatever is installed |
