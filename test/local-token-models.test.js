@@ -165,7 +165,7 @@ describe('client: the official summon model only when data/local-assets.json lis
       assert.equal(e.skel, `/assets/local/spine/token/${id}/${m.skel}`);
       assert.equal(e.atlas, `/assets/local/spine/token/${id}/${m.atlas}`);
       assert.deepEqual(e.textures, m.textures.map((t) => `/assets/local/spine/token/${id}/${t}`));
-      assert.equal(e.pma, true);
+      assert.equal(e.pma, m.pma, 'the committed metadata of the extraction that produced the pages');
       assert.deepEqual(e.anims, m.anims);
       assert.equal(e.local, true);
       assert.equal(e.fallback, MANIFEST.tokens[id].spine || null, 'retain the existing web model as fallback');

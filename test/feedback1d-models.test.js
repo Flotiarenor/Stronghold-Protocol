@@ -222,7 +222,7 @@ describe('D3 client: the official model only when data/local-assets.json lists i
       assert.equal(e.skel, `/assets/local/spine/enemy/${id}/${id}.skel`);
       assert.equal(e.atlas, `/assets/local/spine/enemy/${id}/${id}.atlas`);
       assert.deepEqual(e.textures, [`/assets/local/spine/enemy/${id}/${id}.png`]);
-      assert.equal(e.pma, true);
+      assert.equal(e.pma, COMMITTED[id].pma, 'the committed metadata of the extraction that produced the pages');
       assert.deepEqual(e.anims, COMMITTED[id].anims);
       assert.deepEqual(e.hits, COMMITTED[id].hits);
       assert.equal(e.fallback, web, 'the plain 源石虫 if the official model fails to load');

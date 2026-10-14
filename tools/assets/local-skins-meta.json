@@ -1,7 +1,7 @@
 {
  "version": 1,
  "note": "Metadata of the operator skin models extracted from the local game client (tools/local-skins-meta.mjs, tools/local-extract/extract.py `skins`). Keyed `<charId>/<stem>` (a `/back` suffix for the Back model); the art itself is never committed. Read by tools/local-extract to fill data/skins-local.json (docs/SKINS.md).",
- "count": 541,
+ "count": 540,
  "roleFixes": 0,
  "models": {
   "char_003_kalts/char_003_kalts_boc_6": {
@@ -10,7 +10,7 @@
    "textures": [
     "char_003_kalts_boc_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -61,7 +61,7 @@
    "textures": [
     "char_003_kalts_boc_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -111,7 +111,7 @@
    "textures": [
     "char_003_kalts_sale_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -162,7 +162,7 @@
    "textures": [
     "char_003_kalts_sale_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -212,7 +212,7 @@
    "textures": [
     "char_010_chen_nian_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -290,7 +290,7 @@
    "textures": [
     "char_010_chen_nian_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -347,7 +347,7 @@
    "textures": [
     "char_010_chen_sale_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -425,7 +425,7 @@
    "textures": [
     "char_010_chen_sale_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -482,7 +482,7 @@
    "textures": [
     "char_017_huang_as_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -586,7 +586,7 @@
    "textures": [
     "char_017_huang_as_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -660,7 +660,7 @@
    "textures": [
     "char_017_huang_witch_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -761,7 +761,7 @@
    "textures": [
     "char_017_huang_witch_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -835,7 +835,7 @@
    "textures": [
     "char_1012_skadi2_boc_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -892,7 +892,7 @@
    "textures": [
     "char_1012_skadi2_iteration_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -950,7 +950,7 @@
    "textures": [
     "char_1013_chen2_boc_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1044,7 +1044,7 @@
    "textures": [
     "char_1013_chen2_boc_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1114,7 +1114,7 @@
    "textures": [
     "char_1013_chen2_summer_20.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1208,7 +1208,7 @@
    "textures": [
     "char_1013_chen2_summer_20.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1278,7 +1278,7 @@
    "textures": [
     "char_1014_nearl2_epoque_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1350,7 +1350,7 @@
    "textures": [
     "char_1014_nearl2_epoque_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1412,7 +1412,7 @@
    "textures": [
     "char_1016_agoat2_epoque_34.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1479,7 +1479,7 @@
    "textures": [
     "char_1016_agoat2_epoque_34.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1545,7 +1545,7 @@
    "textures": [
     "char_1016_agoat2_epoque_57.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1612,7 +1612,7 @@
    "textures": [
     "char_1016_agoat2_epoque_57.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1678,7 +1678,7 @@
    "textures": [
     "char_1019_siege2_epoque_50.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1754,7 +1754,7 @@
    "textures": [
     "char_1019_siege2_epoque_50.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1825,7 +1825,7 @@
    "textures": [
     "char_1020_reed2_epoque_30.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1887,7 +1887,7 @@
    "textures": [
     "char_1020_reed2_epoque_30.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -1945,7 +1945,7 @@
    "textures": [
     "char_1020_reed2_snow_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2007,7 +2007,7 @@
    "textures": [
     "char_1020_reed2_snow_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2065,7 +2065,7 @@
    "textures": [
     "char_1020_reed2_summer_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2127,7 +2127,7 @@
    "textures": [
     "char_1020_reed2_summer_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2185,7 +2185,7 @@
    "textures": [
     "char_1021_kroos2_game_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2251,7 +2251,7 @@
    "textures": [
     "char_1021_kroos2_game_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2316,7 +2316,7 @@
    "textures": [
     "char_1021_kroos2_nian_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2381,7 +2381,7 @@
    "textures": [
     "char_1021_kroos2_nian_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2445,7 +2445,7 @@
    "textures": [
     "char_1023_ghost2_boc_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2520,7 +2520,7 @@
    "textures": [
     "char_1023_ghost2_boc_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2582,7 +2582,7 @@
    "textures": [
     "char_1026_gvial2_summer_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2651,7 +2651,7 @@
    "textures": [
     "char_1026_gvial2_summer_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2715,7 +2715,7 @@
    "textures": [
     "char_1028_texas2_epoque_36.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2794,7 +2794,7 @@
    "textures": [
     "char_1028_texas2_epoque_36.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2872,7 +2872,7 @@
    "textures": [
     "char_1028_texas2_iteration_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -2950,7 +2950,7 @@
    "textures": [
     "char_1028_texas2_iteration_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3027,7 +3027,7 @@
    "textures": [
     "char_102_texas_epoque_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3080,7 +3080,7 @@
    "textures": [
     "char_102_texas_epoque_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3132,7 +3132,7 @@
    "textures": [
     "char_102_texas_winter_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3185,7 +3185,7 @@
    "textures": [
     "char_102_texas_winter_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3237,7 +3237,7 @@
    "textures": [
     "char_1031_slent2_epoque_32.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3298,7 +3298,7 @@
    "textures": [
     "char_1031_slent2_epoque_32.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3358,7 +3358,7 @@
    "textures": [
     "char_1032_excu2_sale_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3474,7 +3474,7 @@
    "textures": [
     "char_1032_excu2_sale_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3557,7 +3557,7 @@
    "textures": [
     "char_1032_excu2_sanrio_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3673,7 +3673,7 @@
    "textures": [
     "char_1032_excu2_sanrio_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3756,7 +3756,7 @@
    "textures": [
     "char_1033_swire2_ambienceSynesthesia_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3825,7 +3825,7 @@
    "textures": [
     "char_1033_swire2_ambienceSynesthesia_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3893,7 +3893,7 @@
    "textures": [
     "char_1034_jesca2_cfa_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -3995,7 +3995,7 @@
    "textures": [
     "char_1034_jesca2_cfa_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4069,7 +4069,7 @@
    "textures": [
     "char_1035_wisdel_game_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4182,7 +4182,7 @@
    "textures": [
     "char_1035_wisdel_game_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4266,7 +4266,7 @@
    "textures": [
     "char_1035_wisdel_sale_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4379,7 +4379,7 @@
    "textures": [
     "char_1035_wisdel_sale_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4463,7 +4463,7 @@
    "textures": [
     "char_1038_whitw2_sale_15.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4537,7 +4537,7 @@
    "textures": [
     "char_1038_whitw2_sale_15.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4610,7 +4610,7 @@
    "textures": [
     "char_1039_thorn2_marthe_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4679,7 +4679,7 @@
    "textures": [
     "char_1039_thorn2_marthe_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4742,7 +4742,7 @@
    "textures": [
     "char_103_angel_kfc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4793,7 +4793,7 @@
    "textures": [
     "char_103_angel_kfc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4843,7 +4843,7 @@
    "textures": [
     "char_103_angel_sale_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4894,7 +4894,7 @@
    "textures": [
     "char_103_angel_sale_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4944,7 +4944,7 @@
    "textures": [
     "char_103_angel_wild_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -4995,7 +4995,7 @@
    "textures": [
     "char_103_angel_wild_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5045,7 +5045,7 @@
    "textures": [
     "char_1040_blaze2_winter_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5115,7 +5115,7 @@
    "textures": [
     "char_1040_blaze2_winter_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5184,7 +5184,7 @@
    "textures": [
     "char_1041_angel2_iteration_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5305,7 +5305,7 @@
    "textures": [
     "char_1041_angel2_iteration_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5389,7 +5389,7 @@
    "textures": [
     "char_1042_phatm2_sightseer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5459,7 +5459,7 @@
    "textures": [
     "char_1042_phatm2_sightseer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5528,7 +5528,7 @@
    "textures": [
     "char_1043_leizi2_game_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5599,7 +5599,7 @@
    "textures": [
     "char_1043_leizi2_game_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5664,7 +5664,7 @@
    "textures": [
     "char_1044_hsgma2_whirlwind_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5743,7 +5743,7 @@
    "textures": [
     "char_1044_hsgma2_whirlwind_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5826,7 +5826,7 @@
    "textures": [
     "char_1046_sbell2_ambienceSynesthesia_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5899,7 +5899,7 @@
    "textures": [
     "char_1046_sbell2_ambienceSynesthesia_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -5971,7 +5971,7 @@
    "textures": [
     "char_107_liskam_nian_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6031,7 +6031,7 @@
    "textures": [
     "char_107_liskam_nian_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6086,7 +6086,7 @@
    "textures": [
     "char_107_liskam_striker_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6151,7 +6151,7 @@
    "textures": [
     "char_107_liskam_striker_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6206,7 +6206,7 @@
    "textures": [
     "char_108_silent_sweep_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6257,7 +6257,7 @@
    "textures": [
     "char_108_silent_sweep_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6307,7 +6307,7 @@
    "textures": [
     "char_108_silent_winter_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6358,7 +6358,7 @@
    "textures": [
     "char_108_silent_winter_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6408,7 +6408,7 @@
    "textures": [
     "char_112_siege_striker_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6466,7 +6466,7 @@
    "textures": [
     "char_112_siege_striker_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6523,7 +6523,7 @@
    "textures": [
     "char_112_siege_wild_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6581,7 +6581,7 @@
    "textures": [
     "char_112_siege_wild_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6635,7 +6635,7 @@
    "textures": [
     "char_113_cqbw_epoque_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6710,7 +6710,7 @@
    "textures": [
     "char_113_cqbw_epoque_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6776,7 +6776,7 @@
    "textures": [
     "char_126_shotst_epoque_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6827,7 +6827,7 @@
    "textures": [
     "char_126_shotst_epoque_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6877,7 +6877,7 @@
    "textures": [
     "char_126_shotst_epoque_28.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6928,7 +6928,7 @@
    "textures": [
     "char_126_shotst_epoque_28.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -6978,7 +6978,7 @@
    "textures": [
     "char_127_estell_epoque_50.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7029,7 +7029,7 @@
    "textures": [
     "char_127_estell_epoque_50.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7079,7 +7079,7 @@
    "textures": [
     "char_128_plosis_epoque_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7135,7 +7135,7 @@
    "textures": [
     "char_128_plosis_epoque_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7190,7 +7190,7 @@
    "textures": [
     "char_128_plosis_yun_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7247,7 +7247,7 @@
    "textures": [
     "char_128_plosis_yun_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7303,7 +7303,7 @@
    "textures": [
     "char_134_ifrit_kfc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7381,7 +7381,7 @@
    "textures": [
     "char_134_ifrit_kfc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Default",
     "deploy": "Default",
@@ -7435,7 +7435,7 @@
    "textures": [
     "char_134_ifrit_rilakkuma_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7516,7 +7516,7 @@
    "textures": [
     "char_134_ifrit_rilakkuma_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7578,7 +7578,7 @@
    "textures": [
     "char_134_ifrit_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7656,7 +7656,7 @@
    "textures": [
     "char_134_ifrit_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7712,7 +7712,7 @@
    "textures": [
     "char_136_hsguma_nian_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7782,7 +7782,7 @@
    "textures": [
     "char_136_hsguma_nian_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7837,7 +7837,7 @@
    "textures": [
     "char_136_hsguma_summer_16.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7907,7 +7907,7 @@
    "textures": [
     "char_136_hsguma_summer_16.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -7962,7 +7962,7 @@
    "textures": [
     "char_140_whitew_boc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8020,7 +8020,7 @@
    "textures": [
     "char_140_whitew_boc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8077,7 +8077,7 @@
    "textures": [
     "char_143_ghost_winter_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8136,7 +8136,7 @@
    "textures": [
     "char_143_ghost_winter_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8186,7 +8186,7 @@
    "textures": [
     "char_145_prove_summer_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8237,7 +8237,7 @@
    "textures": [
     "char_145_prove_summer_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8282,7 +8282,7 @@
    "textures": [
     "char_145_prove_wild_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8333,7 +8333,7 @@
    "textures": [
     "char_145_prove_wild_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8383,7 +8383,7 @@
    "textures": [
     "char_147_shining_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8434,7 +8434,7 @@
    "textures": [
     "char_147_shining_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8484,7 +8484,7 @@
    "textures": [
     "char_1502_crosly_iteration_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8557,7 +8557,7 @@
    "textures": [
     "char_1502_crosly_iteration_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8629,7 +8629,7 @@
    "textures": [
     "char_150_snakek_wild_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8682,7 +8682,7 @@
    "textures": [
     "char_150_snakek_wild_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8732,7 +8732,7 @@
    "textures": [
     "char_150_snakek_yun_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8785,7 +8785,7 @@
    "textures": [
     "char_150_snakek_yun_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8835,7 +8835,7 @@
    "textures": [
     "char_171_bldsk_summer_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8891,7 +8891,7 @@
    "textures": [
     "char_171_bldsk_summer_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8941,7 +8941,7 @@
    "textures": [
     "char_171_bldsk_witch_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -8997,7 +8997,7 @@
    "textures": [
     "char_171_bldsk_witch_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9047,7 +9047,7 @@
    "textures": [
     "char_172_svrash_ambienceSynesthesia_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9114,7 +9114,7 @@
    "textures": [
     "char_172_svrash_ambienceSynesthesia_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9171,7 +9171,7 @@
    "textures": [
     "char_172_svrash_snow_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9238,7 +9238,7 @@
    "textures": [
     "char_172_svrash_snow_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9295,7 +9295,7 @@
    "textures": [
     "char_172_svrash_summer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9362,7 +9362,7 @@
    "textures": [
     "char_172_svrash_summer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9419,7 +9419,7 @@
    "textures": [
     "char_173_slchan_wild_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9475,7 +9475,7 @@
    "textures": [
     "char_173_slchan_wild_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9530,7 +9530,7 @@
    "textures": [
     "char_173_slchan_wwf_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9586,7 +9586,7 @@
    "textures": [
     "char_173_slchan_wwf_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9641,7 +9641,7 @@
    "textures": [
     "char_174_slbell_snow_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9697,7 +9697,7 @@
    "textures": [
     "char_174_slbell_snow_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9747,7 +9747,7 @@
    "textures": [
     "char_179_cgbird_sightseer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9807,7 +9807,7 @@
    "textures": [
     "char_179_cgbird_sightseer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9866,7 +9866,7 @@
    "textures": [
     "char_179_cgbird_witch_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9917,7 +9917,7 @@
    "textures": [
     "char_179_cgbird_witch_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -9967,7 +9967,7 @@
    "textures": [
     "char_180_amgoat_sanrio_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10020,7 +10020,7 @@
    "textures": [
     "char_180_amgoat_sanrio_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10070,7 +10070,7 @@
    "textures": [
     "char_180_amgoat_summer_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10123,7 +10123,7 @@
    "textures": [
     "char_180_amgoat_summer_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10173,7 +10173,7 @@
    "textures": [
     "char_181_flower_daily_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10224,7 +10224,7 @@
    "textures": [
     "char_181_flower_daily_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10274,7 +10274,7 @@
    "textures": [
     "char_181_flower_epoque_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10325,7 +10325,7 @@
    "textures": [
     "char_181_flower_epoque_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10375,7 +10375,7 @@
    "textures": [
     "char_183_skgoat_epoque_30.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10431,7 +10431,7 @@
    "textures": [
     "char_183_skgoat_epoque_30.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10486,7 +10486,7 @@
    "textures": [
     "char_188_helage_boc_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10552,7 +10552,7 @@
    "textures": [
     "char_188_helage_boc_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10617,7 +10617,7 @@
    "textures": [
     "char_196_sunbr_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10674,7 +10674,7 @@
    "textures": [
     "char_196_sunbr_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10727,7 +10727,7 @@
    "textures": [
     "char_197_poca_epoque_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10783,7 +10783,7 @@
    "textures": [
     "char_197_poca_epoque_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10838,7 +10838,7 @@
    "textures": [
     "char_197_poca_rilakkuma_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10894,7 +10894,7 @@
    "textures": [
     "char_197_poca_rilakkuma_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -10949,7 +10949,7 @@
    "textures": [
     "char_199_yak_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11000,7 +11000,7 @@
    "textures": [
     "char_199_yak_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11050,7 +11050,7 @@
    "textures": [
     "char_2012_typhon_summer_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11146,7 +11146,7 @@
    "textures": [
     "char_2012_typhon_summer_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11219,7 +11219,7 @@
    "textures": [
     "char_2012_typhon_wild_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11315,7 +11315,7 @@
    "textures": [
     "char_2012_typhon_wild_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11388,7 +11388,7 @@
    "textures": [
     "char_2013_cerber_summer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11453,7 +11453,7 @@
    "textures": [
     "char_2013_cerber_summer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11517,7 +11517,7 @@
    "textures": [
     "char_2013_cerber_whirlwind_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11582,7 +11582,7 @@
    "textures": [
     "char_2013_cerber_whirlwind_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11646,7 +11646,7 @@
    "textures": [
     "char_2014_nian_cfa_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11716,7 +11716,7 @@
    "textures": [
     "char_2014_nian_cfa_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11775,7 +11775,7 @@
    "textures": [
     "char_2014_nian_nian_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11845,7 +11845,7 @@
    "textures": [
     "char_2014_nian_nian_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11899,7 +11899,7 @@
    "textures": [
     "char_2015_dusk_nian_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -11960,7 +11960,7 @@
    "textures": [
     "char_2015_dusk_nian_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12020,7 +12020,7 @@
    "textures": [
     "char_2015_dusk_nian_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12081,7 +12081,7 @@
    "textures": [
     "char_2015_dusk_nian_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12141,7 +12141,7 @@
    "textures": [
     "char_2023_ling_ncg_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12203,7 +12203,7 @@
    "textures": [
     "char_2023_ling_ncg_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12264,7 +12264,7 @@
    "textures": [
     "char_2023_ling_nian_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12326,7 +12326,7 @@
    "textures": [
     "char_2023_ling_nian_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12387,7 +12387,7 @@
    "textures": [
     "char_2023_ling_nian_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12449,7 +12449,7 @@
    "textures": [
     "char_2023_ling_nian_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12510,7 +12510,7 @@
    "textures": [
     "char_2024_chyue_cfa_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12602,7 +12602,7 @@
    "textures": [
     "char_2024_chyue_cfa_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12693,7 +12693,7 @@
    "textures": [
     "char_2024_chyue_nian_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12785,7 +12785,7 @@
    "textures": [
     "char_2024_chyue_nian_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12876,7 +12876,7 @@
    "textures": [
     "char_2025_shu_nian_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -12951,7 +12951,7 @@
    "textures": [
     "char_2025_shu_nian_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13025,7 +13025,7 @@
    "textures": [
     "char_2026_yu_nian_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13093,7 +13093,7 @@
    "textures": [
     "char_2026_yu_nian_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13160,7 +13160,7 @@
    "textures": [
     "char_202_demkni_ambienceSynesthesia_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13217,7 +13217,7 @@
    "textures": [
     "char_202_demkni_ambienceSynesthesia_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13266,7 +13266,7 @@
    "textures": [
     "char_202_demkni_boc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13323,7 +13323,7 @@
    "textures": [
     "char_202_demkni_boc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13377,7 +13377,7 @@
    "textures": [
     "char_202_demkni_test_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13434,7 +13434,7 @@
    "textures": [
     "char_202_demkni_test_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13488,7 +13488,7 @@
    "textures": [
     "char_206_gnosis_boc_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13557,7 +13557,7 @@
    "textures": [
     "char_206_gnosis_boc_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13625,7 +13625,7 @@
    "textures": [
     "char_213_mostma_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13688,7 +13688,7 @@
    "textures": [
     "char_213_mostma_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13750,7 +13750,7 @@
    "textures": [
     "char_213_mostma_epoque_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13813,7 +13813,7 @@
    "textures": [
     "char_213_mostma_epoque_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13875,7 +13875,7 @@
    "textures": [
     "char_222_bpipe_epoque_28.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -13963,7 +13963,7 @@
    "textures": [
     "char_222_bpipe_epoque_28.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14030,7 +14030,7 @@
    "textures": [
     "char_222_bpipe_epoque_40.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14118,7 +14118,7 @@
    "textures": [
     "char_222_bpipe_epoque_40.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14185,7 +14185,7 @@
    "textures": [
     "char_222_bpipe_race_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14273,7 +14273,7 @@
    "textures": [
     "char_222_bpipe_race_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14340,7 +14340,7 @@
    "textures": [
     "char_225_haak_nian_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14410,7 +14410,7 @@
    "textures": [
     "char_225_haak_nian_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14465,7 +14465,7 @@
    "textures": [
     "char_225_haak_nian_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14535,7 +14535,7 @@
    "textures": [
     "char_225_haak_nian_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14585,7 +14585,7 @@
    "textures": [
     "char_237_gravel_winter_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14636,7 +14636,7 @@
    "textures": [
     "char_237_gravel_winter_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14686,7 +14686,7 @@
    "textures": [
     "char_245_cello_sale_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14750,7 +14750,7 @@
    "textures": [
     "char_245_cello_sale_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14813,7 +14813,7 @@
    "textures": [
     "char_248_mgllan_kitchen_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14864,7 +14864,7 @@
    "textures": [
     "char_248_mgllan_kitchen_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14914,7 +14914,7 @@
    "textures": [
     "char_249_mlyss_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -14982,7 +14982,7 @@
    "textures": [
     "char_249_mlyss_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15049,7 +15049,7 @@
    "textures": [
     "char_249_mlyss_boc_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15117,7 +15117,7 @@
    "textures": [
     "char_249_mlyss_boc_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15184,7 +15184,7 @@
    "textures": [
     "char_250_phatom_ghost_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15242,7 +15242,7 @@
    "textures": [
     "char_250_phatom_ghost_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15299,7 +15299,7 @@
    "textures": [
     "char_250_phatom_sale_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15357,7 +15357,7 @@
    "textures": [
     "char_250_phatom_sale_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15414,7 +15414,7 @@
    "textures": [
     "char_253_greyy_epoque_515.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15465,7 +15465,7 @@
    "textures": [
     "char_253_greyy_epoque_515.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15515,7 +15515,7 @@
    "textures": [
     "char_253_greyy_epoque_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15566,7 +15566,7 @@
    "textures": [
     "char_253_greyy_epoque_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Default",
     "deploy": "Default",
@@ -15620,7 +15620,7 @@
    "textures": [
     "char_254_vodfox_witch_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15671,7 +15671,7 @@
    "textures": [
     "char_254_vodfox_witch_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15721,7 +15721,7 @@
    "textures": [
     "char_254_vodfox_yun_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15772,7 +15772,7 @@
    "textures": [
     "char_254_vodfox_yun_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15822,7 +15822,7 @@
    "textures": [
     "char_258_podego_epoque_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15876,7 +15876,7 @@
    "textures": [
     "char_258_podego_epoque_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15929,7 +15929,7 @@
    "textures": [
     "char_263_skadi_marthe_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -15982,7 +15982,7 @@
    "textures": [
     "char_263_skadi_marthe_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16034,7 +16034,7 @@
    "textures": [
     "char_263_skadi_summer_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16087,7 +16087,7 @@
    "textures": [
     "char_263_skadi_summer_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16139,7 +16139,7 @@
    "textures": [
     "char_264_f12yin_boc_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16214,7 +16214,7 @@
    "textures": [
     "char_264_f12yin_boc_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16288,7 +16288,7 @@
    "textures": [
     "char_264_f12yin_epoque_15.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16363,7 +16363,7 @@
    "textures": [
     "char_264_f12yin_epoque_15.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16437,7 +16437,7 @@
    "textures": [
     "char_264_f12yin_marthe_13.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16507,7 +16507,7 @@
    "textures": [
     "char_264_f12yin_marthe_13.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16576,7 +16576,7 @@
    "textures": [
     "char_279_excu_boc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16646,7 +16646,7 @@
    "textures": [
     "char_279_excu_boc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16706,7 +16706,7 @@
    "textures": [
     "char_290_vigna_as_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16765,7 +16765,7 @@
    "textures": [
     "char_290_vigna_as_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16815,7 +16815,7 @@
    "textures": [
     "char_290_vigna_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16874,7 +16874,7 @@
    "textures": [
     "char_290_vigna_summer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16924,7 +16924,7 @@
    "textures": [
     "char_291_aglina_boc_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -16987,7 +16987,7 @@
    "textures": [
     "char_291_aglina_summer_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17056,7 +17056,7 @@
    "textures": [
     "char_293_thorns_boc_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17121,7 +17121,7 @@
    "textures": [
     "char_293_thorns_boc_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17181,7 +17181,7 @@
    "textures": [
     "char_293_thorns_it_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17246,7 +17246,7 @@
    "textures": [
     "char_293_thorns_it_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17306,7 +17306,7 @@
    "textures": [
     "char_294_ayer_boc_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17380,7 +17380,7 @@
    "textures": [
     "char_294_ayer_boc_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17444,7 +17444,7 @@
    "textures": [
     "char_300_phenxi_boc_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17508,7 +17508,7 @@
    "textures": [
     "char_300_phenxi_boc_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17571,7 +17571,7 @@
    "textures": [
     "char_300_phenxi_witch_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17635,7 +17635,7 @@
    "textures": [
     "char_300_phenxi_witch_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17698,7 +17698,7 @@
    "textures": [
     "char_306_leizi_game_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17749,7 +17749,7 @@
    "textures": [
     "char_306_leizi_game_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17799,7 +17799,7 @@
    "textures": [
     "char_308_swire_nian_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17858,7 +17858,7 @@
    "textures": [
     "char_308_swire_nian_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17912,7 +17912,7 @@
    "textures": [
     "char_311_mudrok_ambienceSynesthesia_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -17975,7 +17975,7 @@
    "textures": [
     "char_311_mudrok_ambienceSynesthesia_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18029,7 +18029,7 @@
    "textures": [
     "char_311_mudrok_summer_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18092,7 +18092,7 @@
    "textures": [
     "char_311_mudrok_summer_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18151,7 +18151,7 @@
    "textures": [
     "char_311_mudrok_wild_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18214,7 +18214,7 @@
    "textures": [
     "char_311_mudrok_wild_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18273,7 +18273,7 @@
    "textures": [
     "char_322_lmlee_sanrio_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18335,7 +18335,7 @@
    "textures": [
     "char_322_lmlee_sanrio_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18396,7 +18396,7 @@
    "textures": [
     "char_322_lmlee_whirlwind_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18458,7 +18458,7 @@
    "textures": [
     "char_322_lmlee_whirlwind_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18519,7 +18519,7 @@
    "textures": [
     "char_322_lmlee_witch_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18581,7 +18581,7 @@
    "textures": [
     "char_322_lmlee_witch_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18643,7 +18643,7 @@
    "textures": [
     "char_332_archet_sale_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18705,7 +18705,7 @@
    "textures": [
     "char_332_archet_sale_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18766,7 +18766,7 @@
    "textures": [
     "char_332_archet_shining_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18828,7 +18828,7 @@
    "textures": [
     "char_332_archet_shining_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18889,7 +18889,7 @@
    "textures": [
     "char_337_utage_epoque_15.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18942,7 +18942,7 @@
    "textures": [
     "char_337_utage_epoque_15.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -18994,7 +18994,7 @@
    "textures": [
     "char_337_utage_summer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19047,7 +19047,7 @@
    "textures": [
     "char_337_utage_summer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19099,7 +19099,7 @@
    "textures": [
     "char_340_shwaz_snow_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19158,7 +19158,7 @@
    "textures": [
     "char_340_shwaz_snow_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19216,7 +19216,7 @@
    "textures": [
     "char_340_shwaz_striker_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19275,7 +19275,7 @@
    "textures": [
     "char_340_shwaz_striker_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19333,7 +19333,7 @@
    "textures": [
     "char_341_sntlla_summer_15.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19389,7 +19389,7 @@
    "textures": [
     "char_341_sntlla_summer_15.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19444,7 +19444,7 @@
    "textures": [
     "char_344_beewax_epoque_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19498,7 +19498,7 @@
    "textures": [
     "char_344_beewax_epoque_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19551,7 +19551,7 @@
    "textures": [
     "char_344_beewax_summer_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19605,7 +19605,7 @@
    "textures": [
     "char_344_beewax_summer_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19658,7 +19658,7 @@
    "textures": [
     "char_350_surtr_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19718,7 +19718,7 @@
    "textures": [
     "char_350_surtr_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19773,7 +19773,7 @@
    "textures": [
     "char_350_surtr_it_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19838,7 +19838,7 @@
    "textures": [
     "char_350_surtr_it_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19898,7 +19898,7 @@
    "textures": [
     "char_350_surtr_summer_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -19963,7 +19963,7 @@
    "textures": [
     "char_350_surtr_summer_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20023,7 +20023,7 @@
    "textures": [
     "char_358_lisa_epoque_22.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20084,7 +20084,7 @@
    "textures": [
     "char_358_lisa_epoque_22.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20138,7 +20138,7 @@
    "textures": [
     "char_358_lisa_lxh_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20199,7 +20199,7 @@
    "textures": [
     "char_358_lisa_lxh_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20253,7 +20253,7 @@
    "textures": [
     "char_358_lisa_wild_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20314,7 +20314,7 @@
    "textures": [
     "char_358_lisa_wild_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20368,7 +20368,7 @@
    "textures": [
     "char_362_saga_sale_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20432,7 +20432,7 @@
    "textures": [
     "char_362_saga_sale_9.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20495,7 +20495,7 @@
    "textures": [
     "char_373_lionhd_snow_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20549,7 +20549,7 @@
    "textures": [
     "char_373_lionhd_snow_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20602,7 +20602,7 @@
    "textures": [
     "char_373_lionhd_wild_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20656,7 +20656,7 @@
    "textures": [
     "char_373_lionhd_wild_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20709,7 +20709,7 @@
    "textures": [
     "char_377_gdglow_sanrio_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20777,7 +20777,7 @@
    "textures": [
     "char_377_gdglow_sanrio_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20841,7 +20841,7 @@
    "textures": [
     "char_377_gdglow_snow_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20909,7 +20909,7 @@
    "textures": [
     "char_377_gdglow_snow_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -20973,7 +20973,7 @@
    "textures": [
     "char_377_gdglow_summer_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21041,7 +21041,7 @@
    "textures": [
     "char_377_gdglow_summer_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21105,7 +21105,7 @@
    "textures": [
     "char_381_bubble_marthe_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21166,7 +21166,7 @@
    "textures": [
     "char_381_bubble_marthe_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21221,7 +21221,7 @@
    "textures": [
     "char_388_mint_epoque_22.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21284,7 +21284,7 @@
    "textures": [
     "char_388_mint_epoque_22.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21349,7 +21349,7 @@
    "textures": [
     "char_388_mint_epoque_30.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21412,7 +21412,7 @@
    "textures": [
     "char_388_mint_epoque_30.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21477,7 +21477,7 @@
    "textures": [
     "char_391_rosmon_epoque_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21550,7 +21550,7 @@
    "textures": [
     "char_391_rosmon_epoque_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21616,7 +21616,7 @@
    "textures": [
     "char_391_rosmon_sale_16.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21689,7 +21689,7 @@
    "textures": [
     "char_391_rosmon_sale_16.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21755,7 +21755,7 @@
    "textures": [
     "char_4009_irene_ambienceSynesthesia_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21829,7 +21829,7 @@
    "textures": [
     "char_4009_irene_ambienceSynesthesia_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21902,7 +21902,7 @@
    "textures": [
     "char_4009_irene_game_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -21976,7 +21976,7 @@
    "textures": [
     "char_4009_irene_game_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22049,7 +22049,7 @@
    "textures": [
     "char_400_weedy_sightseer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22121,7 +22121,7 @@
    "textures": [
     "char_400_weedy_sightseer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Idle",
@@ -22183,7 +22183,7 @@
    "textures": [
     "char_400_weedy_snow_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22255,7 +22255,7 @@
    "textures": [
     "char_400_weedy_snow_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Idle",
@@ -22317,7 +22317,7 @@
    "textures": [
     "char_4010_etlchi_winter_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22385,7 +22385,7 @@
    "textures": [
     "char_4010_etlchi_winter_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22452,7 +22452,7 @@
    "textures": [
     "char_4011_lessng_whirlwind_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22518,7 +22518,7 @@
    "textures": [
     "char_4011_lessng_whirlwind_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22583,7 +22583,7 @@
    "textures": [
     "char_4013_kjera_epoque_18.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22640,7 +22640,7 @@
    "textures": [
     "char_4013_kjera_epoque_18.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22696,7 +22696,7 @@
    "textures": [
     "char_4016_kazema_witch_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22763,7 +22763,7 @@
    "textures": [
     "char_4016_kazema_witch_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22827,7 +22827,7 @@
    "textures": [
     "char_4026_vulpis_epoque_55.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22894,7 +22894,7 @@
    "textures": [
     "char_4026_vulpis_epoque_55.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -22953,7 +22953,7 @@
    "textures": [
     "char_4027_heyak_ambienceSynesthesia_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23017,7 +23017,7 @@
    "textures": [
     "char_4027_heyak_ambienceSynesthesia_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23080,7 +23080,7 @@
    "textures": [
     "char_4027_heyak_epoque_50.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23144,7 +23144,7 @@
    "textures": [
     "char_4027_heyak_epoque_50.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23207,7 +23207,7 @@
    "textures": [
     "char_4036_forcer_epoque_20.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23276,7 +23276,7 @@
    "textures": [
     "char_4036_forcer_epoque_20.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23331,7 +23331,7 @@
    "textures": [
     "char_4039_horn_epoque_24.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23431,7 +23431,7 @@
    "textures": [
     "char_4039_horn_epoque_24.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23515,7 +23515,7 @@
    "textures": [
     "char_4040_rockr_lxh_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23572,7 +23572,7 @@
    "textures": [
     "char_4040_rockr_lxh_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23628,7 +23628,7 @@
    "textures": [
     "char_4042_lumen_ambienceSynesthesia_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23693,7 +23693,7 @@
    "textures": [
     "char_4042_lumen_ambienceSynesthesia_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23757,7 +23757,7 @@
    "textures": [
     "char_4042_lumen_sanrio_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23822,7 +23822,7 @@
    "textures": [
     "char_4042_lumen_sanrio_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23886,7 +23886,7 @@
    "textures": [
     "char_4046_ebnhlz_boc_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -23971,7 +23971,7 @@
    "textures": [
     "char_4046_ebnhlz_boc_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24055,7 +24055,7 @@
    "textures": [
     "char_4048_doroth_witch_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24111,7 +24111,7 @@
    "textures": [
     "char_4048_doroth_witch_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24166,7 +24166,7 @@
    "textures": [
     "char_4051_akkord_summer_23.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24236,7 +24236,7 @@
    "textures": [
     "char_4051_akkord_summer_23.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24293,7 +24293,7 @@
    "textures": [
     "char_4054_malist_summer_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24349,7 +24349,7 @@
    "textures": [
     "char_4054_malist_summer_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24404,7 +24404,7 @@
    "textures": [
     "char_4055_bgsnow_wild_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24494,7 +24494,7 @@
    "textures": [
     "char_4055_bgsnow_wild_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24562,7 +24562,7 @@
    "textures": [
     "char_4055_bgsnow_yun_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24652,7 +24652,7 @@
    "textures": [
     "char_4055_bgsnow_yun_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24720,7 +24720,7 @@
    "textures": [
     "char_4058_pepe_sightseer_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24792,7 +24792,7 @@
    "textures": [
     "char_4058_pepe_sightseer_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24863,7 +24863,7 @@
    "textures": [
     "char_4064_mlynar_epoque_28.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -24933,7 +24933,7 @@
    "textures": [
     "char_4064_mlynar_epoque_28.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25002,7 +25002,7 @@
    "textures": [
     "char_4064_mlynar_iteration_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25072,7 +25072,7 @@
    "textures": [
     "char_4064_mlynar_iteration_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25141,7 +25141,7 @@
    "textures": [
     "char_4065_judge_epoque_33.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25219,7 +25219,7 @@
    "textures": [
     "char_4065_judge_epoque_33.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25281,7 +25281,7 @@
    "textures": [
     "char_4065_judge_snow_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25359,7 +25359,7 @@
    "textures": [
     "char_4065_judge_snow_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25421,7 +25421,7 @@
    "textures": [
     "char_4072_ironmn_ambienceSynesthesia_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25483,7 +25483,7 @@
    "textures": [
     "char_4072_ironmn_ambienceSynesthesia_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25544,7 +25544,7 @@
    "textures": [
     "char_4072_ironmn_summer_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25606,7 +25606,7 @@
    "textures": [
     "char_4072_ironmn_summer_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25667,7 +25667,7 @@
    "textures": [
     "char_4079_haini_epoque_45.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25727,7 +25727,7 @@
    "textures": [
     "char_4079_haini_epoque_45.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25786,7 +25786,7 @@
    "textures": [
     "char_4080_lin_littlePony_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25858,7 +25858,7 @@
    "textures": [
     "char_4080_lin_littlePony_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -25929,7 +25929,7 @@
    "textures": [
     "char_4080_lin_nian_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26001,7 +26001,7 @@
    "textures": [
     "char_4080_lin_nian_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26072,7 +26072,7 @@
    "textures": [
     "char_4080_lin_summer_19.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26144,7 +26144,7 @@
    "textures": [
     "char_4080_lin_summer_19.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26215,7 +26215,7 @@
    "textures": [
     "char_4082_qiubai_epoque_31.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26286,7 +26286,7 @@
    "textures": [
     "char_4082_qiubai_epoque_31.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26356,7 +26356,7 @@
    "textures": [
     "char_4082_qiubai_ncg_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26427,7 +26427,7 @@
    "textures": [
     "char_4082_qiubai_ncg_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26497,7 +26497,7 @@
    "textures": [
     "char_4087_ines_ambienceSynesthesia_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26570,7 +26570,7 @@
    "textures": [
     "char_4087_ines_ambienceSynesthesia_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26642,7 +26642,7 @@
    "textures": [
     "char_4087_ines_boc_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26715,7 +26715,7 @@
    "textures": [
     "char_4087_ines_boc_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26787,7 +26787,7 @@
    "textures": [
     "char_4088_hodrer_sightseer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26863,7 +26863,7 @@
    "textures": [
     "char_4088_hodrer_sightseer_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -26934,7 +26934,7 @@
    "textures": [
     "char_4098_vvana_epoque_40.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27024,7 +27024,7 @@
    "textures": [
     "char_4098_vvana_epoque_40.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27101,7 +27101,7 @@
    "textures": [
     "char_4100_caper_summer_18.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27173,7 +27173,7 @@
    "textures": [
     "char_4100_caper_summer_18.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27229,7 +27229,7 @@
    "textures": [
     "char_4114_harold_snow_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27287,7 +27287,7 @@
    "textures": [
     "char_4114_harold_snow_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27344,7 +27344,7 @@
    "textures": [
     "char_4116_blkkgt_witch_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27468,7 +27468,7 @@
    "textures": [
     "char_4116_blkkgt_witch_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27566,7 +27566,7 @@
    "textures": [
     "char_4117_ray_shining_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27691,7 +27691,7 @@
    "textures": [
     "char_4117_ray_shining_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27773,7 +27773,7 @@
    "textures": [
     "char_4117_ray_summer_22.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27899,7 +27899,7 @@
    "textures": [
     "char_4117_ray_summer_22.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -27982,7 +27982,7 @@
    "textures": [
     "char_4121_zuole_nian_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28057,7 +28057,7 @@
    "textures": [
     "char_4121_zuole_nian_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28131,7 +28131,7 @@
    "textures": [
     "char_4121_zuole_sale_16.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28206,7 +28206,7 @@
    "textures": [
     "char_4121_zuole_sale_16.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28280,7 +28280,7 @@
    "textures": [
     "char_4122_grabds_yun_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28340,7 +28340,7 @@
    "textures": [
     "char_4122_grabds_yun_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28399,7 +28399,7 @@
    "textures": [
     "char_4132_ascln_iteration_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28470,7 +28470,7 @@
    "textures": [
     "char_4132_ascln_iteration_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28540,7 +28540,7 @@
    "textures": [
     "char_4133_logos_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28617,7 +28617,7 @@
    "textures": [
     "char_4133_logos_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28690,7 +28690,7 @@
    "textures": [
     "char_4134_cetsyr_epoque_50.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28751,7 +28751,7 @@
    "textures": [
     "char_4137_udflow_epoque_46.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28824,7 +28824,7 @@
    "textures": [
     "char_4137_udflow_epoque_46.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28881,7 +28881,7 @@
    "textures": [
     "char_4138_narant_breaker_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -28975,7 +28975,7 @@
    "textures": [
     "char_4138_narant_breaker_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29042,7 +29042,7 @@
    "textures": [
     "char_4138_narant_littlePony_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29131,7 +29131,7 @@
    "textures": [
     "char_4138_narant_littlePony_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29193,7 +29193,7 @@
    "textures": [
     "char_4139_papyrs_game_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29249,7 +29249,7 @@
    "textures": [
     "char_4139_papyrs_game_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29304,7 +29304,7 @@
    "textures": [
     "char_4145_ulpia_epoque_48.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29390,7 +29390,7 @@
    "textures": [
     "char_4145_ulpia_epoque_48.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29464,7 +29464,7 @@
    "textures": [
     "char_4146_nymph_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29522,7 +29522,7 @@
    "textures": [
     "char_4146_nymph_ambienceSynesthesia_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29579,7 +29579,7 @@
    "textures": [
     "char_4146_nymph_epoque_42.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29642,7 +29642,7 @@
    "textures": [
     "char_4146_nymph_epoque_42.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29704,7 +29704,7 @@
    "textures": [
     "char_4148_philae_nian_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29762,7 +29762,7 @@
    "textures": [
     "char_4148_philae_nian_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29819,7 +29819,7 @@
    "textures": [
     "char_4151_tinman_sale_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29876,7 +29876,7 @@
    "textures": [
     "char_4151_tinman_sale_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29932,7 +29932,7 @@
    "textures": [
     "char_4163_rosesa_game_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -29993,7 +29993,7 @@
    "textures": [
     "char_4163_rosesa_game_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30053,61 +30053,7 @@
    "textures": [
     "char_416_zumama_boc_3.png"
    ],
-   "pma": true,
-   "anims": {
-    "idle": "Idle",
-    "deploy": "Start",
-    "attack": {
-     "begin": null,
-     "loop": "Attack",
-     "end": null
-    },
-    "attackDown": null,
-    "skill": {
-     "begin": null,
-     "loop": "Skill",
-     "end": null,
-     "index": 0,
-     "idle": null
-    },
-    "die": null,
-    "move": null,
-    "stun": null
-   },
-   "animations": {
-    "Attack": 1.6,
-    "Default": 0,
-    "Idle": 3.5,
-    "Skill": 1.6,
-    "Start": 1
-   },
-   "events": [
-    "OnAttack",
-    "OnPlayAudio",
-    "OnStart"
-   ],
-   "hits": {
-    "Attack": [
-     0.467
-    ],
-    "Skill": [
-     0.633
-    ]
-   },
-   "bounds": {
-    "x": 29.99,
-    "y": -283.49,
-    "width": 863.5,
-    "height": 1470.02
-   }
-  },
-  "char_416_zumama/char_416_zumama_boc_3/back": {
-   "skel": "char_416_zumama_boc_3.skel",
-   "atlas": "char_416_zumama_boc_3.atlas",
-   "textures": [
-    "char_416_zumama_boc_3.png"
-   ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30161,7 +30107,7 @@
    "textures": [
     "char_4179_monstr_boc_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30226,7 +30172,7 @@
    "textures": [
     "char_4179_monstr_boc_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30283,7 +30229,7 @@
    "textures": [
     "char_4191_tippi_epoque_57.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30353,7 +30299,7 @@
    "textures": [
     "char_4191_tippi_epoque_57.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30418,7 +30364,7 @@
    "textures": [
     "char_4193_lemuen_ambienceSynesthesia_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30499,7 +30445,7 @@
    "textures": [
     "char_4193_lemuen_ambienceSynesthesia_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30565,7 +30511,7 @@
    "textures": [
     "char_4194_rmixer_boc_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30630,7 +30576,7 @@
    "textures": [
     "char_4194_rmixer_boc_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30694,7 +30640,7 @@
    "textures": [
     "char_4195_radian_game_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30765,7 +30711,7 @@
    "textures": [
     "char_4195_radian_game_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30835,7 +30781,7 @@
    "textures": [
     "char_4196_reckpr_yun_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30887,7 +30833,7 @@
    "textures": [
     "char_4196_reckpr_yun_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -30938,7 +30884,7 @@
    "textures": [
     "char_4202_haruka_iteration_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31012,7 +30958,7 @@
    "textures": [
     "char_4202_haruka_iteration_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31085,7 +31031,7 @@
    "textures": [
     "char_4204_mantra_sightseer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31144,7 +31090,7 @@
    "textures": [
     "char_4204_mantra_sightseer_4.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31202,7 +31148,7 @@
    "textures": [
     "char_4207_branch_yun_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31259,7 +31205,7 @@
    "textures": [
     "char_4207_branch_yun_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31315,7 +31261,7 @@
    "textures": [
     "char_420_flamtl_game_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31380,7 +31326,7 @@
    "textures": [
     "char_420_flamtl_game_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31444,7 +31390,7 @@
    "textures": [
     "char_423_blemsh_littlePony_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31509,7 +31455,7 @@
    "textures": [
     "char_423_blemsh_littlePony_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31565,7 +31511,7 @@
    "textures": [
     "char_423_blemsh_witch_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31635,7 +31581,7 @@
    "textures": [
     "char_423_blemsh_witch_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31696,7 +31642,7 @@
    "textures": [
     "char_426_billro_snow_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31756,7 +31702,7 @@
    "textures": [
     "char_426_billro_snow_3.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31814,7 +31760,7 @@
    "textures": [
     "char_426_billro_summer_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31875,7 +31821,7 @@
    "textures": [
     "char_426_billro_summer_8.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -31935,7 +31881,7 @@
    "textures": [
     "char_427_vigil_epoque_27.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32021,7 +31967,7 @@
    "textures": [
     "char_427_vigil_epoque_27.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32096,7 +32042,7 @@
    "textures": [
     "char_430_fartth_whirlwind_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32167,7 +32113,7 @@
    "textures": [
     "char_430_fartth_whirlwind_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32227,7 +32173,7 @@
    "textures": [
     "char_431_ashlok_epoque_28.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32301,7 +32247,7 @@
    "textures": [
     "char_431_ashlok_epoque_28.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32360,7 +32306,7 @@
    "textures": [
     "char_437_mizuki_game_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32421,7 +32367,7 @@
    "textures": [
     "char_437_mizuki_game_6.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32481,7 +32427,7 @@
    "textures": [
     "char_437_mizuki_sale_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32542,7 +32488,7 @@
    "textures": [
     "char_437_mizuki_sale_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32602,7 +32548,7 @@
    "textures": [
     "char_440_pinecn_epoque_31.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32675,7 +32621,7 @@
    "textures": [
     "char_440_pinecn_epoque_31.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32740,7 +32686,7 @@
    "textures": [
     "char_440_pinecn_shining_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32814,7 +32760,7 @@
    "textures": [
     "char_440_pinecn_shining_1.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32880,7 +32826,7 @@
    "textures": [
     "char_446_aroma_epoque_54.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -32948,7 +32894,7 @@
    "textures": [
     "char_446_aroma_epoque_54.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33003,7 +32949,7 @@
    "textures": [
     "char_450_necras_ambienceSynesthesia_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33068,7 +33014,7 @@
    "textures": [
     "char_450_necras_ambienceSynesthesia_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33135,7 +33081,7 @@
    "textures": [
     "char_450_necras_summer_20.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33205,7 +33151,7 @@
    "textures": [
     "char_450_necras_summer_20.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33277,7 +33223,7 @@
    "textures": [
     "char_469_indigo_nian_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33334,7 +33280,7 @@
    "textures": [
     "char_469_indigo_nian_7.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33390,7 +33336,7 @@
    "textures": [
     "char_472_pasngr_epoque_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33452,7 +33398,7 @@
    "textures": [
     "char_472_pasngr_epoque_17.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33513,7 +33459,7 @@
    "textures": [
     "char_474_glady_boc_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33588,7 +33534,7 @@
    "textures": [
     "char_474_glady_boc_5.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33662,7 +33608,7 @@
    "textures": [
     "char_474_glady_epoque_33.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33737,7 +33683,7 @@
    "textures": [
     "char_474_glady_epoque_33.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33811,7 +33757,7 @@
    "textures": [
     "char_479_sleach_epoque_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33871,7 +33817,7 @@
    "textures": [
     "char_479_sleach_epoque_14.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33929,7 +33875,7 @@
    "textures": [
     "char_479_sleach_summer_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -33989,7 +33935,7 @@
    "textures": [
     "char_479_sleach_summer_11.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34047,7 +33993,7 @@
    "textures": [
     "char_485_pallas_epoque_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34125,7 +34071,7 @@
    "textures": [
     "char_485_pallas_epoque_12.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34186,7 +34132,7 @@
    "textures": [
     "char_485_pallas_epoque_19.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34264,7 +34210,7 @@
    "textures": [
     "char_485_pallas_epoque_19.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34325,7 +34271,7 @@
    "textures": [
     "char_491_humus_marthe_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34383,7 +34329,7 @@
    "textures": [
     "char_491_humus_marthe_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34440,7 +34386,7 @@
    "textures": [
     "char_494_vendla_game_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34489,7 +34435,7 @@
    "textures": [
     "char_494_vendla_game_10.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34537,7 +34483,7 @@
    "textures": [
     "char_496_wildmn_epoque_16.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34614,7 +34560,7 @@
    "textures": [
     "char_496_wildmn_epoque_16.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34674,7 +34620,7 @@
    "textures": [
     "char_498_inside_kitchen_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34757,7 +34703,7 @@
    "textures": [
     "char_498_inside_kitchen_2.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34823,7 +34769,7 @@
    "textures": [
     "char_498_inside_summer_22.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
@@ -34906,7 +34852,7 @@
    "textures": [
     "char_498_inside_summer_22.png"
    ],
-   "pma": true,
+   "pma": false,
    "anims": {
     "idle": "Idle",
     "deploy": "Start",
