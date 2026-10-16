@@ -21,6 +21,8 @@ import { data } from '../data.js';
 import { MODULE_NONE, PROF_NAME, skillLabel, moduleBadge, quickSkillTags, opsOf, chessOptions } from '../ui/loadoutModel.js';
 import { diySlotList, pickChoices, pickOptions, slotRecord, defaultPick } from '../ui/diyModel.js';
 import { OperatorVoice } from '../ui/operatorVoice.js';
+// 皮肤 (docs/SKINS.md): the same self-contained section the 干员调配 detail draws, keyed by the operator being picked
+import { SkinSection } from '../ui/skinPicker.js';
 import { LoadoutStats } from '../ui/loadoutStats.js';
 import { CultivationSelects, CultivationSection } from './cultivation.js';
 import { SkillIcon, ModuleGlyph, SkillSection, ModuleSection, ProfFilter, rowControlHit } from './loadoutSections.js';
@@ -379,6 +381,12 @@ export function DiyPickerView({ m, slot, picks, kitted, onDone, onClose, filter,
             </div>
             <div class="diy-pick__detail">
               <${OperatorVoice} charId=${draft.charId} />
+              ${/* 外观 sits directly under the operator's name and above the 技能 / 局内数值 / 模组 sections, with 潜能与练度
+                   last, exactly as in the 干员调配 detail (docs/SKINS.md) — and it is here, on the operator being picked,
+                   rather than on the slot card: the appearance belongs to the operator, and the choice is made while
+                   picking one. The key is the operator's charId (`draft.charId`), which is what the manifest groups skins
+                   under and what the server stores (`ps.skins[charId]`), so a slot fielded as its golden form keeps it. */ null}
+              <${SkinSection} charId=${draft.charId} />
               ${ch.proto
                 ? html`<p class="lo-locknote"><${Icon} name="info" />${t('原型干员没有潜能与练度')}</p>`
                 : onOps ? html`<${CultivationSection} charId=${draft.charId} ops=${ops} onSet=${onOps} />` : null}

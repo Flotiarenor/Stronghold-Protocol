@@ -1800,5 +1800,15 @@
   "其余 {n} 个已移到 plugins/_removed/。": "The other {n} {n|was|were} moved to plugins/_removed/.",
   "已移到 plugins/_removed/：{n} 个插件": "Moved to plugins/_removed/: {n} {n|plugin|plugins}",
   "选中「{name}」": "Select \"{name}\"",
-  "符号链接的插件文件夹不能在这里删除。": "A plugin folder that is a symbolic link cannot be deleted here."
+  "符号链接的插件文件夹不能在这里删除。": "A plugin folder that is a symbolic link cannot be deleted here.",
+  "皮肤": "Skin",
+  "选择皮肤": "Choose a skin",
+  "{n} 套外观": "{n} skins",
+  "时装": "Skin",
+  "干员本体，不使用时装": "The operator's own appearance, no skin",
+  "点击选择这套外观": "Click to wear this skin",
+  "点击放大预览": "Click to enlarge",
+  "外观预览": "Skin preview",
+  "显示其他玩家的皮肤": "Show other players' skins",
+  "这台服务器不接受皮肤选择，只有本机保存": "This server does not accept skin choices; they are kept in this browser only"
 }
